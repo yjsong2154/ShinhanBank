@@ -11,6 +11,8 @@ export const Container = styled.div`
   height: 60px;
   background-color: white;
   border-top: 1px solid #e0e0e0;
+  max-width: 500px;
+  margin: 0 auto;
 `;
 
 export const FooterItem = styled.div`

@@ -11,15 +11,15 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <div style={{ paddingBottom: '60px' }}> {/* Footer 높이만큼 패딩 추가 */}
+        <div style={{ paddingBottom: '60px', margin: '0 auto', maxWidth: '500px' }}> {/* Footer 높이만큼 패딩 추가 */}
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/savings" element={<SavingsDetailPage />} />
             <Route path="/challenge" element={<ChallengePage />} />
             <Route path="/mypage" element={<MyPage />} />
           </Routes>
+          <Footer />
         </div>
-        <Footer />
       </BrowserRouter>
     </ThemeProvider>
   );
