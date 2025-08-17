@@ -2,6 +2,8 @@
 import * as S from './MainPage.styles'
 import ChallengeCard from './components/ChallengeCard/ChallengeCard';
 import MySavingsStatus from './components/MySavingsStatus/MySavingsStatus';
+import RankingSection from './components/Ranking/RankingSection';
+import FeedSection from './components/Feed/FeedSection';
 
 const MainPage = () => {
   // const navigate = useNavigate(); //저축통 버튼 관련
@@ -21,8 +23,8 @@ const MainPage = () => {
 
       <ChallengeCard />
       <MySavingsStatus />
-      {/* TODO: 랭킹 섹션 컴포넌트 */}
-      {/* TODO: 최신 글, 인기 글 섹션 컴포넌트 */}
+      <RankingSection />
+      <FeedSection />
 
       <S.CreateSavingsButton onClick={handleCreateSavings}>
         + 새 저축통 만들기
