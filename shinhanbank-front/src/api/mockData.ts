@@ -70,3 +70,78 @@ export const feedData = {
     },
   ],
 };
+
+// 마이 페이지 프로필용 데이터
+export const myProfile = {
+  name: '김서연',
+  studentId: '학번: 2021****',
+  university: '연세대학교',
+  linkedAccount: '신한 ****-****-1234',
+  profileImageUrl: '/images/profile_kim.png',
+};
+
+// 마이페이지 챌린지 관련 데이터
+// src/api/mockData.ts
+// 다른 데이터 아래에 추가
+export const myPageData = {
+  profile: {
+    name: '김서연',
+    studentId: '2021****',
+    university: '연세대학교',
+    linkedAccount: '신한 ****-****-1234',
+    profileImageUrl: '/images/profile_kim.png',
+  },
+  character: {
+    name: '새싹이',
+    level: 3,
+    points: 2450,
+    nextLevelPoints: 850,
+  },
+  savingsList: [
+    {
+      id: 1,
+      title: '여행 자금 모으기',
+      currentAmount: 450000,
+      targetAmount: 1000000,
+      period: '155일 남음',
+      progress: 45,
+      status: '진행중',
+    },
+    {
+      id: 2,
+      title: '노트북 구매 자금',
+      currentAmount: 800000,
+      targetAmount: 800000,
+      period: '완료',
+      progress: 100,
+      status: '완료',
+    },
+  ],
+  challengeHistory: {
+    inProgress: [
+      {
+        id: 1,
+        title: '30일 매일 저축',
+        progress: 50,
+        period: '15일 남음',
+        reward: '15원',
+      },
+      {
+        id: 2,
+        title: '주말 용돈 아끼기',
+        progress: 85,
+        period: '3일 남음',
+        reward: '3원',
+      },
+    ],
+    completed: [
+      {
+        id: 3,
+        title: '커피 절약 챌린지',
+        progress: 100,
+        period: '완료',
+        reward: '1,500원',
+      },
+    ],
+  },
+};

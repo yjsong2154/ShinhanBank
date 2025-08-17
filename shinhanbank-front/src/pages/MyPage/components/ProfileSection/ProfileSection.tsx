@@ -1,28 +1,21 @@
-import React from 'react';
 import * as S from './ProfileSection.styles';
+import { myProfile } from '../../../../api/mockData'; // mockData 직접 불러오기
 
-interface ProfileSectionProps {
-  name: string;
-  studentId: string;
-  university: string;
-  linkedAccount: string;
-}
-
-const ProfileSection: React.FC<ProfileSectionProps> = ({ name, studentId, university, linkedAccount }) => {
+const ProfileSection = () => {
   return (
     <S.Container>
       <S.ProfileInfoWrapper>
-        <S.Name>{name}</S.Name>
-        <S.StudentId>{studentId}</S.StudentId>
+        <S.Name>{myProfile.name}</S.Name>
+        <S.StudentId>{myProfile.studentId}</S.StudentId>
       </S.ProfileInfoWrapper>
       <S.DetailInfoWrapper>
         <S.InfoBox>
           <S.InfoTitle>소속 대학</S.InfoTitle>
-          <S.InfoContent>{university}</S.InfoContent>
+          <S.InfoContent>{myProfile.university}</S.InfoContent>
         </S.InfoBox>
         <S.InfoBox>
           <S.InfoTitle>연결 계좌</S.InfoTitle>
-          <S.InfoContent>{linkedAccount}</S.InfoContent>
+          <S.InfoContent>{myProfile.linkedAccount}</S.InfoContent>
         </S.InfoBox>
       </S.DetailInfoWrapper>
     </S.Container>

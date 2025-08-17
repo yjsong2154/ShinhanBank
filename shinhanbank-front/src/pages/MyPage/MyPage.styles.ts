@@ -19,15 +19,24 @@ export const Title = styled.h1`
   font-weight: bold;
 `;
 
-export const LogoutButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  border-radius: 8px;
-  background-color: transparent;
+export const AccountSetting = styled.div`
+  background-color: #f7f6ff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 30px;
+`;
+
+export const SettingItem = styled.div`
+  padding: 15px 10px;
   font-size: 16px;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.text};
   cursor: pointer;
-  margin-top: 30px;
+  border-bottom: 1px solid #e0e0e0;
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const LogoutItem = styled(SettingItem)`
+  color: red; /* 빨간색으로 변경 */
 `;

@@ -14,6 +14,17 @@ export const Container = styled.div<{ backgroundUrl: string }>`
   overflow: hidden;
 `;
 
+export const FreeContainer = styled.section`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+`;
+
 export const CharacterImage = styled.img`
   width: 70%;
   height: auto;
