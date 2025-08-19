@@ -1,22 +1,28 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.section`
-  padding: 15px;
-  background-color: ${({ theme }) => theme.colors.secondary};
-  border-radius: 12px;
+  position: relative;
+  padding: 20px;
+  background-color: #f9d8ff;
+  border-radius: 25px;
   margin-bottom: 20px;
 `;
 
 export const Title = styled.h2`
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: 15px;
 `;
 
-export const TitleIcon = styled.span`
+export const TitleIcon = styled.img`
+  position: absolute;
+  top: -30px;
+  left: -5px;
+  width: 75px;
+  height: 75px;
   font-size: 20px;
   margin-right: 8px;
 `;
@@ -34,23 +40,33 @@ export const TextWrapper = styled.div`
 
 export const ChallengeTitle = styled.h3`
   font-size: 16px;
+  color: ${({ theme }) => theme.colors.textChallenge};
   font-weight: bold;
   margin: 0 0 5px;
 `;
 
 export const ChallengeDescription = styled.p`
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textChallenge};
   margin: 0 0 10px;
 `;
 
 export const ChallengeInfo = styled.div`
   display: flex;
-  font-size: 12px;
-  color: ${({ theme }) => theme.colors.lightGray};
+  font-size: 14px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.textChallenge};
   span:not(:last-child) {
     margin-right: 10px;
   }
+`;
+
+export const MetaRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 참여자 왼쪽, 버튼 오른쪽 */
+  margin-top: 8px;
+  gap: 12px;
 `;
 
 export const Image = styled.img`
@@ -60,14 +76,14 @@ export const Image = styled.img`
 `;
 
 export const Button = styled.button`
-  width: 100%;
+  width: 40%;
   padding: 10px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.textChallenge};
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 25px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 15px;
+  margin-top: 0;
 `;
