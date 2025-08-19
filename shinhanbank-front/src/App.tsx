@@ -6,6 +6,7 @@ import MainPage from './pages/MainPage';
 import SavingsDetailPage from './pages/SavingsDetailPage';
 import ChallengePage from './pages/ChallengePage';
 import MyPage from './pages/MyPage';
+import NotificationPage from './pages/NotificationPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/savings" element={<SavingsDetailPage />} />
             <Route path="/challenge" element={<ChallengePage />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/notifications" element={<NotificationPage />} />
           </Routes>
           <Footer />
         </div>
