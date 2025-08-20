@@ -28,7 +28,7 @@ const fetchSavingsDetail = async (id: number): Promise<SavingsDetailType> => {
   // const response = await fetch(`/api/savings/${id}`);
   // const data = await response.json();
   // return data;
-
+  console.log('id : ', id)
   await new Promise(resolve => setTimeout(resolve, 500));
   return savingsDetail;
 };

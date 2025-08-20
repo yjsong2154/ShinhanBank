@@ -10,6 +10,7 @@ interface RankingItemProps {
 }
 
 const RankingItem: React.FC<RankingItemProps> = ({ rank, name, amount, profileUrl, isCrown }) => {
+  console.log("remain : ", profileUrl, isCrown)
   return (
     <S.Container>
       <S.Rank>{rank}</S.Rank>
