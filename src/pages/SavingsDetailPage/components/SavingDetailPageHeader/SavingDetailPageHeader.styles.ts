@@ -8,15 +8,6 @@ export const Container = styled.header`
   border-bottom: 1px solid #e0e0e0;
 `;
 
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-`;
-
 export const Icon = styled.img`
   width: 24px;
   height: 24px;

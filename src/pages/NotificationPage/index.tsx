@@ -2,6 +2,7 @@ import TabComponent from '../../components/Tab/TabComponent';
 import NotificationItem from './components/NotificationItem/NotificationItem';
 import { notificationData } from '../../api/mockData';
 import * as S from './NotificationPage.styles'
+import BackButton from '../../components/BackButton/BackButton';
 
 const NotificationPage = () => {
   const allNotifications = notificationData.all.map(item => (
@@ -19,6 +20,7 @@ const NotificationPage = () => {
   return (
     <S.Container>
       <S.Header>
+        <BackButton />
         <S.Title>알림</S.Title>
       </S.Header>
       <TabComponent tabs={tabs} />

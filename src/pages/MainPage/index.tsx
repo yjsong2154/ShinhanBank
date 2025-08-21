@@ -4,6 +4,7 @@ import ChallengeCard from "./components/ChallengeCard/ChallengeCard";
 import MySavingsStatus from "./components/MySavingsStatus/MySavingsStatus";
 import RankingSection from "./components/Ranking/RankingSection";
 import FeedSection from "./components/Feed/FeedSection";
+import NotificationIcon from "./components/NotificationIcon/NotificationIcon";
 
 const MainPage = () => {
   // const navigate = useNavigate(); //저축통 버튼 관련
@@ -18,7 +19,7 @@ const MainPage = () => {
     <S.Container>
       <S.Header>
         <S.Title>적금통 키우기</S.Title>
-        {/* TODO: 알림 아이콘, 프로필 이미지 컴포넌트 추가 */}
+        <NotificationIcon hasNotification={true} />
       </S.Header>
 
       <ChallengeCard />
@@ -29,7 +30,6 @@ const MainPage = () => {
       <S.CreateSavingsButton onClick={handleCreateSavings}>
         + 새 저축통 만들기
       </S.CreateSavingsButton>
-      {/* TODO: 로그아웃 버튼 컴포넌트 추가 */}
     </S.Container>
   );
 };
