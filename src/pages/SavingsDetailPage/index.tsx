@@ -1,8 +1,8 @@
-import useSavingsDetail from '../../hooks/useSavingsDetail';
-import * as S from './SavingsDetailPage.styles';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
-import DetailPageHeader from './components/SavingDetailPageHeader/SavingDetailPageHeader';
-import ProgressSection from './components/ProgressSection/ProgressSection';
+import useSavingsDetail from "../../hooks/useSavingsDetail";
+import * as S from "./SavingsDetailPage.styles";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import DetailPageHeader from "./components/SavingDetailPageHeader/SavingDetailPageHeader";
+import ProgressSection from "./components/ProgressSection/ProgressSection";
 
 const SavingsDetailPage = () => {
   const { data, loading, error } = useSavingsDetail(1); // 가상 데이터 id 1 사용
@@ -39,13 +39,13 @@ const SavingsDetailPage = () => {
       </S.DescriptionSection>
 
       <ProgressSection
-          currentAmount={data.currentAmount}
-          targetAmount={data.targetAmount}
-        />
+        currentAmount={data.currentAmount}
+        targetAmount={data.targetAmount}
+      />
 
       <S.CommentSection>
         <S.SectionTitle>댓글 ({data.comments.length})</S.SectionTitle>
-        {data.comments.map(comment => (
+        {data.comments.map((comment) => (
           <div key={comment.id}>
             <strong>{comment.author}</strong>: {comment.content}
           </div>

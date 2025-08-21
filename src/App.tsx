@@ -8,6 +8,7 @@ import ChallengePage from './pages/ChallengePage';
 import MyPage from './pages/MyPage';
 import NotificationPage from './pages/NotificationPage';
 import LoginPage from './pages/LoginPage';
+import SavingsSettingsPage from './pages/SavingsSettingsPage';
  
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/challenge" element={isLoggedIn ? <ChallengePage /> : <Navigate to="/login" replace />} />
             <Route path="/mypage" element={isLoggedIn ? <MyPage /> : <Navigate to="/login" replace />} />
             <Route path="/notifications" element={isLoggedIn ? <NotificationPage /> : <Navigate to="/login" replace />} />
+            <Route path="/settings" element={<SavingsSettingsPage />} />
           </Routes>
           {!shouldHideFooter && <Footer />}
         </div>
