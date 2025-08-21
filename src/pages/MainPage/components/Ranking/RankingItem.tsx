@@ -1,5 +1,5 @@
-import React from 'react';
-import * as S from './RankingItem.styles'
+import React from "react";
+import * as S from "./RankingItem.styles";
 
 interface RankingItemProps {
   rank: number;
@@ -7,12 +7,21 @@ interface RankingItemProps {
   amount: number;
   profileUrl?: string;
   isCrown?: boolean;
+  rowIndex?: number;
 }
 
-const RankingItem: React.FC<RankingItemProps> = ({ rank, name, amount, profileUrl, isCrown }) => {
-  console.log("remain : ", profileUrl, isCrown)
+const RankingItem: React.FC<RankingItemProps> = ({
+  rank,
+  name,
+  amount,
+  profileUrl,
+  isCrown,
+  rowIndex = 0,
+}) => {
+  console.log("remain : ", profileUrl, isCrown);
+  const striped = rowIndex % 2 === 0;
   return (
-    <S.Container>
+    <S.Container $striped={striped}>
       <S.Rank>{rank}</S.Rank>
       {/* {profileUrl && <S.ProfileImage src={profileUrl} alt={`${name} 프로필`} />} */}
       <S.Name>{name}</S.Name>
