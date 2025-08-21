@@ -12,7 +12,7 @@ const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({ title }) => {
   const navigate = useNavigate(); // useNavigate 훅 사용
 
   const handleMenuClick = () => {
-    navigate("/settings"); // 적금통 설정 페이지 경로로 이동
+    navigate("/save-settings"); // 적금통 설정 페이지 경로로 이동
   };
 
   return (
