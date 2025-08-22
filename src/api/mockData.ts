@@ -22,16 +22,40 @@ export const rankingData = {
       profileUrl: "/images/profile3.png",
       crown: false,
     },
+    {
+      rank: 4,
+      name: "최수진",
+      amount: 372000,
+      profileUrl: "/images/profile4.png",
+    },
+    {
+      rank: 5,
+      name: "한지선",
+      amount: 351000,
+      profileUrl: "/images/profile5.png",
+    },
+    {
+      rank: 6,
+      name: "정우현",
+      amount: 329000,
+      profileUrl: "/images/profile6.png",
+    },
   ],
   university: [
     { rank: 1, name: "연세대학교", amount: 89000000, crown: true },
     { rank: 2, name: "고려대학교", amount: 87000000, crown: false },
     { rank: 3, name: "서강대학교", amount: 85000000, crown: false },
+    { rank: 4, name: "한양대학교", amount: 82000000, crown: false },
+    { rank: 5, name: "중앙대학교", amount: 79000000, crown: false },
+    { rank: 6, name: "경희대학교", amount: 76000000, crown: false },
   ],
   interUniversity: [
     { rank: 1, name: "카이스트", amount: 95000000, crown: true },
     { rank: 2, name: "포항공과대학교", amount: 93000000, crown: false },
     { rank: 3, name: "서울대학교", amount: 91000000, crown: false },
+    { rank: 4, name: "성균관대학교", amount: 89000000, crown: false },
+    { rank: 5, name: "동국대학교", amount: 86000000, crown: false },
+    { rank: 6, name: "이화여자대학교", amount: 83000000, crown: false },
   ],
 };
 
