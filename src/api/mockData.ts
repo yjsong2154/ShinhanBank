@@ -41,13 +41,13 @@ export const rankingData = {
       profileUrl: "/images/profile6.png",
     },
   ],
-  university: [
-    { rank: 1, name: "연세대학교", amount: 89000000, crown: true },
-    { rank: 2, name: "고려대학교", amount: 87000000, crown: false },
-    { rank: 3, name: "서강대학교", amount: 85000000, crown: false },
-    { rank: 4, name: "한양대학교", amount: 82000000, crown: false },
-    { rank: 5, name: "중앙대학교", amount: 79000000, crown: false },
-    { rank: 6, name: "경희대학교", amount: 76000000, crown: false },
+  department: [
+    { rank: 1, name: "경영학과", amount: 89000000, crown: true },
+    { rank: 2, name: "컴퓨터공학과", amount: 87000000, crown: false },
+    { rank: 3, name: "심리학과", amount: 85000000, crown: false },
+    { rank: 4, name: "전자공학과", amount: 82000000, crown: false },
+    { rank: 5, name: "영문학과", amount: 79000000, crown: false },
+    { rank: 6, name: "수학과", amount: 76000000, crown: false },
   ],
   interUniversity: [
     { rank: 1, name: "카이스트", amount: 95000000, crown: true },
