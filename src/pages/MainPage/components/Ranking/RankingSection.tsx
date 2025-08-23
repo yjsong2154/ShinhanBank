@@ -38,20 +38,15 @@ const renderRankingCard = (list: Row[]) => {
 
 const RankingSection = () => {
   const tabs = [
-    { name: "친구 랭킹", component: renderRankingCard(rankingData.friends) },
-    { name: "우리 대학", component: renderRankingCard(rankingData.university) },
+    { name: "학과 랭킹", component: renderRankingCard(rankingData.department) },
     {
-      name: "대학 간",
+      name: "대학 랭킹",
       component: renderRankingCard(rankingData.interUniversity),
     },
   ];
 
   return (
     <S.Container>
-      <S.Title>
-        <S.TitleIcon>🟣</S.TitleIcon>
-        랭킹
-      </S.Title>
       <TabComponent tabs={tabs} />
     </S.Container>
   );
