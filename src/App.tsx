@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
+import { GlobalStyle } from "./styles/GlobalStyle";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Footer from "./components/Footer/Footer";
 import MainPage from "./pages/MainPage";
@@ -33,9 +34,12 @@ function AppContent() {
 
   return (
     <StyledThemeProvider theme={theme}>
+      <GlobalStyle />
       <div
         style={{
-          paddingBottom: shouldHideFooter ? 0 : "60px",
+          paddingBottom: shouldHideFooter
+            ? 0
+            : "calc(60px + env(safe-area-inset-bottom))",
           margin: "0 auto",
           maxWidth: "500px",
         }}
