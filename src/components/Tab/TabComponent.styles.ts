@@ -25,7 +25,7 @@ export const TabButton = styled.button<{ $isActive: boolean }>`
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${(props) => (props.$isActive ? "#fff" : "#7a55dd")};
+    background-color: ${(props) => (props.$isActive ? "#9A77FF" : "#7a55dd")};
     color: #fff;
   }
 `;
