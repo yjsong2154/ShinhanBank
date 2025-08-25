@@ -9,8 +9,9 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     hmr: {
+      protocol: "wss",
+      host: "775828225ce3.ngrok-free.app", // ← 프로토콜 없이 도메인만!
       clientPort: 443,
-      host: "", // ngrok 도메인
     },
   },
 });

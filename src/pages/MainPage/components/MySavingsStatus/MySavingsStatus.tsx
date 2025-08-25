@@ -1,26 +1,61 @@
-import * as S from './MySavingsStatus.styles';
+import * as S from "./MySavingsStatus.styles";
+import { mockSavings } from "../../../../api/mockDataSavingsStatus";
+import Character from "../../../../components/Character/Character";
+import pigIcon from "../../../../assets/icons/pig.svg";
+import emptylikeIcon from "../../../../assets/icons/like_icon_empty.svg";
+import commentIcon from "../../../../assets/icons/comment_icon.svg";
 
 const MySavingsStatus = () => {
   return (
     <S.Container>
       <S.Title>
-        <S.TitleIcon>🟣</S.TitleIcon>
-        나의 저축 현황
+        <S.TitleIcon>
+          <img src={pigIcon} alt="pig icon" />
+        </S.TitleIcon>
+        나의 적금통 현황
       </S.Title>
-      <S.StatusWrapper>
-        <S.Count>
-          <S.CountNumber>5개</S.CountNumber>
-          <S.CountText>저축통 개수</S.CountText>
-        </S.Count>
-        <S.Amount>
-          <S.AmountNumber>₩234,500</S.AmountNumber>
-          <S.AmountText>총 저축 금액</S.AmountText>
-        </S.Amount>
-      </S.StatusWrapper>
-      <S.Alert>
-        <S.AlertIcon>⚠️</S.AlertIcon>
-        오늘 채우지 않은 저축통이 2개 있어요!
-      </S.Alert>
+      {/* 가로 스크롤 카드 리스트 */}
+      <S.ListWrapper>
+        <S.ScrollRow>
+          {mockSavings.map((item) => (
+            <S.Card key={item.id}>
+              <S.CharacterBubble>
+                <Character id={item.characterId} />
+              </S.CharacterBubble>
+
+              <S.CardBody>
+                <S.CardTitle>{item.title}</S.CardTitle>
+                <S.CardDesc>{item.desc}</S.CardDesc>
+
+                <S.Progress>
+                  <S.ProgressBar style={{ width: `${item.progress}%` }} />
+                  <S.ProgressText>{item.progress}%</S.ProgressText>
+                </S.Progress>
+
+                <S.MetaRow>
+                  <S.MetaItem type="button" aria-label="좋아요">
+                    <S.MetaIcon
+                      src={emptylikeIcon}
+                      alt="좋아요"
+                      aria-hidden="true"
+                    />
+                    <span>{item.likes}</span>
+                  </S.MetaItem>
+
+                  <S.MetaItem type="button" aria-label="댓글">
+                    <S.MetaIcon
+                      src={commentIcon}
+                      alt="댓글"
+                      aria-hidden="true"
+                    />
+                    <span>{item.comments}</span>
+                  </S.MetaItem>
+                </S.MetaRow>
+              </S.CardBody>
+            </S.Card>
+          ))}
+        </S.ScrollRow>
+      </S.ListWrapper>
     </S.Container>
   );
 };
