@@ -1,0 +1,9 @@
+.bear-nose {
+    /* 기본 스타일 */
+    animation: wiggle 1s infinite;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); } /* 코 들썩이는 효과 */
+}

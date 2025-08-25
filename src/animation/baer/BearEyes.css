@@ -1,0 +1,10 @@
+/* src/components/bear/BearEyes.css */
+.bear-eyes {
+    /* 기본 스타일 */
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.1); } /* 눈 깜박이는 효과 */
+}

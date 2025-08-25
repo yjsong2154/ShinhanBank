@@ -13,6 +13,7 @@ import SavingsSettingsPage from "./pages/SavingsSettingsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import AccountSettingsPage from "./pages/AccountSettingsPage";
+import AnimationPage from "./animation/AnimationPage";
 
 function App() {
   return (
@@ -45,6 +46,10 @@ function AppContent() {
         }}
       >
         <Routes>
+
+          {/* 임시 애니메이션 페이지 */}
+          <Route path="/animation" element={<AnimationPage />} />
+
           <Route
             path="/login"
             element={isLoggedIn ? <Navigate to="/" replace /> : <LoginPage />}
