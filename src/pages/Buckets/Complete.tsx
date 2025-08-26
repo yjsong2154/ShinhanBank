@@ -42,12 +42,7 @@ const Complete = () => {
     navigate("/");
   };
 
-  const handleToast = (m: string) => {
-    // eslint-disable-next-line no-alert
-    alert(m);
-  };
-
-  const isFlexible = type === "flexible";
+  // 보조 액션 제거로 인한 불필요 함수/변수 삭제
 
   return (
     <Container>
