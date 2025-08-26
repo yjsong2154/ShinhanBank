@@ -19,7 +19,7 @@ const fetchCharacter = async (): Promise<CharacterInfoType> => {
 };
 
 const useCharacter = (id: string) => {
-  console.log(id)
+  console.log("id : ", id)
   return useFetch<CharacterInfoType>(fetchCharacter, []);
 };
 
