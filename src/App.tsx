@@ -3,6 +3,11 @@ import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Footer from "./components/Footer/Footer";
+import NewBucketStart from "./pages/Buckets/NewBucketStart";
+import FixedSavingInput from "./pages/Buckets/FixedSavingInput";
+import PdfViewer from "./pages/Buckets/PdfViewer";
+import FinalConfirm from "./pages/Buckets/FinalConfirm";
+import Complete from "./pages/Buckets/Complete";
 import MainPage from "./pages/MainPage";
 import SavingsDetailPage from "./pages/SavingsDetailPage";
 import ChallengePage from "./pages/ChallengePage";
@@ -27,7 +32,8 @@ function AppContent() {
   const { theme } = useTheme();
 
   const location = useLocation();
-  const shouldHideFooter = location.pathname === "/login";
+  const shouldHideFooter =
+    location.pathname === "/login" || location.pathname.startsWith("/buckets/");
 
   const isLoggedIn =
     typeof window !== "undefined" &&
@@ -129,6 +135,34 @@ function AppContent() {
                 <Navigate to="/login" replace />
               )
             }
+          />
+          <Route
+            path="/buckets/fixed"
+            element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/fixed/input"
+            element={isLoggedIn ? <FixedSavingInput /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/pdf/:docId"
+            element={isLoggedIn ? <PdfViewer /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/final-confirm"
+            element={isLoggedIn ? <FinalConfirm /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/complete"
+            element={isLoggedIn ? <Complete /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/flexible"
+            element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/td"
+            element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
           />
         </Routes>
         {!shouldHideFooter && <Footer />}
