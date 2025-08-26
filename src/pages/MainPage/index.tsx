@@ -1,4 +1,4 @@
-// import { useNavigate } from 'react-router-dom'; //저축통 버튼 관련
+import { useNavigate } from 'react-router-dom'; //저축통 버튼 관련
 import * as S from "./MainPage.styles";
 import ChallengeCard from "./components/ChallengeCard/ChallengeCard";
 import MySavingsStatus from "./components/MySavingsStatus/MySavingsStatus";
@@ -7,12 +7,11 @@ import FeedSection from "./components/Feed/FeedSection";
 import NotificationIcon from "./components/NotificationIcon/NotificationIcon";
 
 const MainPage = () => {
-  // const navigate = useNavigate(); //저축통 버튼 관련
+  const navigate = useNavigate(); //저축통 버튼 관련
 
   const handleCreateSavings = () => {
     // TODO: '새 저축통 만들기' 페이지로 이동하는 로직을 여기에 추가합니다.
-    console.log("새 저축통 만들기 버튼 클릭됨");
-    // navigate('/create-savings');
+    navigate('/buckets/fixed');
   };
 
   return (
