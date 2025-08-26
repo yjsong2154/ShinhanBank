@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyle";
+import { ProgressGlobal } from "./styles/ProgressGlobal";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Footer from "./components/Footer/Footer";
 import MainPage from "./pages/MainPage";
@@ -36,6 +37,7 @@ function AppContent() {
   return (
     <StyledThemeProvider theme={theme}>
       <GlobalStyle />
+      <ProgressGlobal />
       <div
         style={{
           paddingBottom: shouldHideFooter
@@ -46,7 +48,6 @@ function AppContent() {
         }}
       >
         <Routes>
-
           {/* 임시 애니메이션 페이지 */}
           <Route path="/animation" element={<AnimationPage />} />
 

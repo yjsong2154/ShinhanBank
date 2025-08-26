@@ -1,4 +1,9 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
+
+const fillTo = (to: number) => keyframes`
+  from { --p: 0%; }
+  to   { --p: ${to}%; }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -37,18 +42,36 @@ export const CharacterWrapper = styled.div`
   }
 `;
 
-export const ProgressCircle = styled.div<{ progress: number }>`
+export const ProgressCircle = styled.div<{
+  progress: number;
+  animate?: boolean;
+  durationMs?: number;
+}>`
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
-  background: conic-gradient(
-    #b699ff ${({ progress }) => progress}%,
-    #d8d4e3 ${({ progress }) => progress}%
-  );
+
+  /* --p가 현재 채움 비율(%) */
+  --p: ${({ animate, progress }) => (animate ? "0%" : `${progress}%`)};
+
+  background: conic-gradient(#b699ff var(--p), #d8d4e3 var(--p));
+
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* 애니메이션*/
+  ${({ animate = true, progress, durationMs = 2500 }) =>
+    animate &&
+    css`
+      @media (prefers-reduced-motion: no-preference) {
+        animation: ${fillTo(progress)} ${durationMs}ms ease-out forwards;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        --p: ${progress}%;
+      }
+    `}
 `;
 
 export const GoalText = styled.div`
