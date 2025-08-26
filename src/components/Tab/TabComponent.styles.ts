@@ -15,7 +15,7 @@ export const TabHeader = styled.div`
 export const TabButton = styled.button<{ $isActive: boolean }>`
   flex-grow: 1;
   padding: 10px 20px;
-  border: none;
+  border: 2px solid #9a77ff;
   border-radius: 15px;
   background-color: ${(props) => (props.$isActive ? "#9A77FF" : "#fff")};
   color: ${(props) => (props.$isActive ? "#fff" : "#9A77FF")};
