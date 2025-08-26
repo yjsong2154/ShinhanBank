@@ -1,5 +1,3 @@
-import Character from "../components/Character/Character";
-
 export interface SavingItem {
   id: number;
   characterId: string;

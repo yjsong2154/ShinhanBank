@@ -29,7 +29,7 @@ const CharacterAnimation = () => {
 
         let frame = 0;
         const totalFrames = 4; // 눈 깜박임 프레임 수
-        const eyeBlinkInterval = 100; // 눈 깜박임 속도
+        // const eyeBlinkInterval = 100; // 눈 깜박임 속도
 
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
