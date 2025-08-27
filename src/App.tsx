@@ -20,6 +20,7 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import AccountSettingsPage from "./pages/AccountSettingsPage";
 import AnimationPage from "./animation/AnimationPage";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function AppContent() {
     <StyledThemeProvider theme={theme}>
       <GlobalStyle />
       <ProgressGlobal />
+      <ScrollToTop />
       <div
         style={{
           paddingBottom: shouldHideFooter
