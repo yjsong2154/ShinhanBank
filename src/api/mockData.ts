@@ -163,23 +163,19 @@ export const myPageData = {
     inProgress: [
       {
         id: 1,
-        title: "30일 매일 저축",
+        title: "대학생 커피 절약 챌린지",
+        content:
+          "일주일간 카페에서 일회용 컵 대신 텀블러를 이용하여 절약한 금액을 저축해보세요.",
         progress: 50,
-        period: "15일 남음",
+        period: "4일 남음",
         reward: "15원",
-      },
-      {
-        id: 2,
-        title: "주말 용돈 아끼기",
-        progress: 85,
-        period: "3일 남음",
-        reward: "3원",
       },
     ],
     completed: [
       {
-        id: 3,
-        title: "커피 절약 챌린지",
+        id: 2,
+        title: "30일 매일 저축",
+        content: "30일 동안 매일 꾸준히 저축하여 습관을 만들어 보세요.",
         progress: 100,
         period: "완료",
         reward: "1,500원",
