@@ -1,11 +1,23 @@
+import { Link } from "react-router-dom";
 import * as S from "./MySavingsStatus.styles";
-import { mockSavings } from "../../../../api/mockDataSavingsStatus";
 import Character from "../../../../components/Character/Character";
 import pigIcon from "../../../../assets/icons/pig.svg";
 import emptylikeIcon from "../../../../assets/icons/like_icon_empty.svg";
 import commentIcon from "../../../../assets/icons/comment_icon.svg";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
+import useSavings from "../../../../hooks/useSavings";
 
 const MySavingsStatus = () => {
+  const { data: savings, loading, error } = useSavings();
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <S.Container>
       <S.Title>
@@ -14,47 +26,52 @@ const MySavingsStatus = () => {
         </S.TitleIcon>
         나의 적금통 현황
       </S.Title>
-      {/* 가로 스크롤 카드 리스트 */}
       <S.ListWrapper>
-        <S.ScrollRow>
-          {mockSavings.map((item) => (
-            <S.Card key={item.id}>
-              <S.CharacterBubble>
-                <Character id={item.characterId} />
-              </S.CharacterBubble>
+        {savings && savings.length > 0 ? (
+          <S.ScrollRow>
+            {savings.map((item) => (
+              <Link to={`/savings/${item.id}`} key={item.id}>
+                <S.Card>
+                  <S.CharacterBubble>
+                    <Character id={item.character.character_item.id} />
+                  </S.CharacterBubble>
 
-              <S.CardBody>
-                <S.CardTitle>{item.title}</S.CardTitle>
-                <S.CardDesc>{item.desc}</S.CardDesc>
+                  <S.CardBody>
+                    <S.CardTitle>{item.name}</S.CardTitle>
+                    <S.CardDesc>{item.description}</S.CardDesc>
 
-                <S.Progress>
-                  <S.ProgressBar style={{ width: `${item.progress}%` }} />
-                  <S.ProgressText>{item.progress}%</S.ProgressText>
-                </S.Progress>
+                    <S.Progress>
+                      <S.ProgressBar style={{ width: `${item.current_progress}%` }} />
+                      <S.ProgressText>{item.current_progress}%</S.ProgressText>
+                    </S.Progress>
 
-                <S.MetaRow>
-                  <S.MetaItem type="button" aria-label="좋아요">
-                    <S.MetaIcon
-                      src={emptylikeIcon}
-                      alt="좋아요"
-                      aria-hidden="true"
-                    />
-                    <span>{item.likes}</span>
-                  </S.MetaItem>
+                    <S.MetaRow>
+                      <S.MetaItem type="button" aria-label="좋아요">
+                        <S.MetaIcon
+                          src={emptylikeIcon}
+                          alt="좋아요"
+                          aria-hidden="true"
+                        />
+                        <span>{item.like_count}</span>
+                      </S.MetaItem>
 
-                  <S.MetaItem type="button" aria-label="댓글">
-                    <S.MetaIcon
-                      src={commentIcon}
-                      alt="댓글"
-                      aria-hidden="true"
-                    />
-                    <span>{item.comments}</span>
-                  </S.MetaItem>
-                </S.MetaRow>
-              </S.CardBody>
-            </S.Card>
-          ))}
-        </S.ScrollRow>
+                      <S.MetaItem type="button" aria-label="댓글">
+                        <S.MetaIcon
+                          src={commentIcon}
+                          alt="댓글"
+                          aria-hidden="true"
+                        />
+                        <span>{item.comment_count}</span>
+                      </S.MetaItem>
+                    </S.MetaRow>
+                  </S.CardBody>
+                </S.Card>
+              </Link>
+            ))}
+          </S.ScrollRow>
+        ) : (
+          <S.EmptyMessage>진행중인 적금이 없습니다.</S.EmptyMessage>
+        )}
       </S.ListWrapper>
     </S.Container>
   );

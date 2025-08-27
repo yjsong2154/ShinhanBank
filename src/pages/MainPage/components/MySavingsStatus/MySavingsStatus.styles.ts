@@ -173,3 +173,14 @@ export const MetaIcon = styled.img`
   user-select: none;
   pointer-events: none;
 `;
+
+export const EmptyMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  color: #473350; // theme.colors.gray_m
+  background-color: #f7f6ff; // theme.colors.gray_l
+  border-radius: 8px;
+  font-size: 1rem;
+`;

@@ -91,3 +91,14 @@ export const Period = styled.span`
   font-size: 12px;
   color: ${({ theme }) => theme.colors.lightGray};
 `;
+
+export const EmptyMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  color: ${({ theme }) => theme.colors.gray_m};
+  background-color: ${({ theme }) => theme.colors.gray_l};
+  border-radius: 8px;
+  font-size: 1rem;
+`;

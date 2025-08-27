@@ -14,10 +14,6 @@ const Footer = () => {
         <S.Icon src="/icons/home.svg" alt="홈" />
         <S.Label>홈</S.Label>
       </S.FooterItem>
-      <S.FooterItem onClick={() => handleNavigation('/savings')}>
-        <S.Icon src="/icons/savings.svg" alt="저축통" />
-        <S.Label>저축통</S.Label>
-      </S.FooterItem>
       <S.FooterItem onClick={() => handleNavigation('/challenge')}>
         <S.Icon src="/icons/challenge.svg" alt="챌린지" />
         <S.Label>챌린지</S.Label>

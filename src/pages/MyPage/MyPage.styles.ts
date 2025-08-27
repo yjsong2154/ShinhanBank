@@ -40,3 +40,11 @@ export const SettingItem = styled.div`
 export const LogoutItem = styled(SettingItem)`
   color: red; /* 빨간색으로 변경 */
 `;
+
+// 하단 보조 문구 (필수 아님)
+export const HelperText = styled.p`
+  margin: 12px 0 0 0;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.lightGray};
+  text-align: center;
+`;

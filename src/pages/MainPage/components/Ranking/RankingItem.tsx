@@ -18,7 +18,7 @@ const RankingItem: React.FC<RankingItemProps> = ({
   isCrown,
   rowIndex = 0,
 }) => {
-  console.log("remain : ", profileUrl, isCrown);
+  // console.log("remain : ", profileUrl, isCrown);
   const striped = rowIndex % 2 === 0;
   return (
     <S.Container $striped={striped}>

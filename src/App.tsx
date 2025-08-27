@@ -62,7 +62,7 @@ function AppContent() {
             }
           />
           <Route
-            path="/savings"
+            path="/savings/:id"
             element={
               isLoggedIn ? (
                 <SavingsDetailPage />
