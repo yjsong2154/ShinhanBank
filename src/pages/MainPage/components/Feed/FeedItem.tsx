@@ -1,6 +1,8 @@
 import React from "react";
 import * as S from "./FeedItem.styles";
 import Character from "../../../../components/Character/Character";
+import emptylikeIcon from "../../../../assets/icons/like_icon_empty.svg";
+import commentIcon from "../../../../assets/icons/comment_icon.svg";
 
 interface FeedItemProps {
   author: string;
@@ -25,7 +27,8 @@ const FeedItem: React.FC<FeedItemProps> = ({
   comments,
   characterId,
 }) => {
-  const progressPercentage = target > 0 ? Math.round((current / target) * 100) : 0;
+  const progressPercentage =
+    target > 0 ? Math.round((current / target) * 100) : 0;
 
   return (
     <S.Container>
@@ -51,10 +54,12 @@ const FeedItem: React.FC<FeedItemProps> = ({
 
         <S.ReactionInfo>
           <S.ReactionItem>
-            <S.ReactionCount>좋아요 {likes}</S.ReactionCount>
+            <img src={emptylikeIcon} alt="like icon" />
+            <S.ReactionCount>{likes}</S.ReactionCount>
           </S.ReactionItem>
           <S.ReactionItem>
-            <S.ReactionCount>댓글 {comments}</S.ReactionCount>
+            <img src={commentIcon} alt="comment icon" />
+            <S.ReactionCount>{comments}</S.ReactionCount>
           </S.ReactionItem>
         </S.ReactionInfo>
       </S.RightSection>

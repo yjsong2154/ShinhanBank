@@ -129,16 +129,27 @@ export const ReactionInfo = styled.div`
   width: max-content;
 `;
 
-export const ReactionItem = styled.div`
-  display: flex;
+export const ReactionItem = styled.button`
+  display: inline-flex;
   align-items: center;
-  margin-right: 15px;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  padding: 4px 6px;
+  cursor: pointer;
+
+  &:active {
+    transform: translateY(0.5px);
+  }
 `;
 
 export const ReactionIcon = styled.img`
   width: 16px;
   height: 16px;
-  margin-right: 5px;
+  display: block;
+  user-select: none;
+  pointer-events: none;
 `;
 
 export const ReactionCount = styled.span`
