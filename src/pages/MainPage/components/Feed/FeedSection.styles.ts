@@ -5,7 +5,13 @@ export const Container = styled.section`
 `;
 
 export const FeedList = styled.div`
-  //padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;                
+  a {
+    display: block;          
+    text-decoration: none;
+    color: inherit;
 `;
 
 export const EmptyMessage = styled.div`
