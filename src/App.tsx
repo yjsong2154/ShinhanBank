@@ -140,6 +140,16 @@ function AppContent() {
             }
           />
           <Route
+            path="/buckets"
+            element={
+              isLoggedIn ? (
+                <Navigate to="/buckets/flexible" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
             path="/buckets/fixed"
             element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
           />

@@ -11,7 +11,7 @@ const MainPage = () => {
 
   const handleCreateSavings = () => {
     // TODO: '새 저축통 만들기' 페이지로 이동하는 로직을 여기에 추가합니다.
-    navigate('/buckets/fixed');
+    navigate('/buckets');
   };
 
   return (

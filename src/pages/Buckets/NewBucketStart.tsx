@@ -1,23 +1,26 @@
-// 파일 목적: 적금/예금 개설 시작 페이지. 유형 탭, 상품 카드 선택, 다음 단계로 이동.
-// 주요 섹션: 탭/히어로 요약/상품 카드 리스트/다음 버튼. 상태는 내부 상태 + navigate 시 전달.
-// 주의사항: 금리 표시는 세전(base/max)만. 적금 주기는 '매일'만 노출. 이자/원금 계산 로직 없음.
+// 파일 목적: 백엔드 상품 목록(/bucket/create_list) 기반으로 새 적금통 시작 화면을 구성합니다.
+// 주요 기능: 진입 시 목록 조회, '챌린지/일반적금/정기예금' 탭 분류, 상품 카드 선택 및 다음 단계 이동.
+// 주의사항: 히어로 섹션 제거. 상품 정보는 API 응답 필드 위주로 단순 표기합니다.
 
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
-import type { ProductType } from "../../api/mockDataSavingProducts";
-import { savingProducts } from "../../api/mockDataSavingProducts";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import { getBucketCreateList, type CreateListItem } from "../../api/getCreateList";
+
+// 라우트 키는 기존 경로를 유지합니다: fixed(일반적금), flexible(챌린지), td(정기예금)
+type TabKey = "fixed" | "flexible" | "td";
 
 type Tab = {
-  key: ProductType;
+  key: TabKey;
   label: string;
   route: string;
 };
 
 const TABS: Tab[] = [
-  { key: "fixed", label: "적금(고정)", route: "/buckets/fixed" },
-  { key: "flexible", label: "적금(자유)", route: "/buckets/flexible" },
+  { key: "flexible", label: "챌린지", route: "/buckets/flexible" },
+  { key: "fixed", label: "일반적금", route: "/buckets/fixed" },
   { key: "td", label: "정기예금", route: "/buckets/td" },
 ];
 
@@ -26,47 +29,87 @@ const NewBucketStart = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const currentTabKey: ProductType = useMemo(() => {
+  const currentTabKey: TabKey = useMemo(() => {
     if (location.pathname.includes("/buckets/flexible")) return "flexible";
     if (location.pathname.includes("/buckets/td")) return "td";
     return "fixed";
   }, [location.pathname]);
 
-  // 선택 상태: 상품 ID, 기간(개월)
+  // 서버 데이터 상태
+  const [items, setItems] = useState<CreateListItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 선택 상태: 상품 ID(accountTypeUniqueNo), 기간(일)
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [selectedTerm, setSelectedTerm] = useState<number | null>(null);
 
-  const productsForTab = useMemo(
-    () => savingProducts.filter((p) => p.type === currentTabKey),
-    [currentTabKey]
-  );
+  // accountDescription 내 JSON 파싱: is_challenge 여부 확인
+  const isChallenge = (item: CreateListItem): boolean => {
+    try {
+      const parsed = JSON.parse(item.accountDescription || "{}");
+      const val = parsed?.is_challenge;
+      return String(val).toLowerCase() === "true";
+    } catch {
+      return false;
+    }
+  };
 
-  const selectedProduct = useMemo(
-    () => productsForTab.find((p) => p.id === selectedProductId) || null,
-    [productsForTab, selectedProductId]
-  );
-
-  // 탭 변경 또는 최초 진입 시 기본 선택(첫 상품/첫 기간)
+  // 데이터 로드
   useEffect(() => {
-    if (!selectedProductId && productsForTab.length > 0) {
-      const first = productsForTab[0];
-      setSelectedProductId(first.id);
-      setSelectedTerm(first.terms?.[0] ?? null);
-    }
-  }, [productsForTab, selectedProductId]);
+    let mounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getBucketCreateList();
+        if (!mounted) return;
+        setItems(data);
+      } catch (e: unknown) {
+        if (!mounted) return;
+        const message = e instanceof Error ? e.message : "목록 조회에 실패했습니다.";
+        setError(message);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
-  const heroTitle = useMemo(() => {
+  // 탭별 분류: 챌린지/일반적금/정기예금
+  const challengeItems = useMemo(
+    () => items.filter((i) => i.accountTypeName === "적금" && isChallenge(i)),
+    [items]
+  );
+  const savingsItems = useMemo(
+    () => items.filter((i) => i.accountTypeName === "적금" && !isChallenge(i)),
+    [items]
+  );
+  const depositItems = useMemo(
+    () => items.filter((i) => i.accountTypeName === "예금"),
+    [items]
+  );
+
+  const productsForTab = useMemo(() => {
     switch (currentTabKey) {
-      case "fixed":
-        return "이렇게 모으면";
       case "flexible":
-        return "이렇게 모으면";
+        return challengeItems;
       case "td":
-        return "이렇게 맡기면";
+        return depositItems;
+      case "fixed":
       default:
-        return "요약";
+        return savingsItems;
     }
-  }, [currentTabKey]);
+  }, [currentTabKey, challengeItems, savingsItems, depositItems]);
+
+  // 선택된 상품은 필요 시 개별 핸들러에서 조회합니다.
+
+  // 최초 진입 시 자동 선택하지 않습니다. 사용자가 명시적으로 선택하도록 유지합니다.
+  useEffect(() => {
+    // no-op: 의도적으로 자동 선택하지 않음
+  }, [productsForTab]);
 
   const handleChangeTab = (tab: Tab) => {
     // 선택 상태는 페이지 단위로 유지. 탭 이동 시 선택 초기화.
@@ -77,32 +120,33 @@ const NewBucketStart = () => {
 
   const handleSelectProduct = (productId: string) => {
     setSelectedProductId(productId);
-    // 제품 클릭 시 기본 기간을 자동 선택(첫 번째 항목)
-    const p = productsForTab.find((x) => x.id === productId);
-    setSelectedTerm(p?.terms?.[0] ?? null);
+    // 제품 클릭 시 기간(일)을 설정
+    const p = productsForTab.find((x) => x.accountTypeUniqueNo === productId);
+    setSelectedTerm(p ? Number(p.subscriptionPeriod) || null : null);
   };
 
-  const handleSelectTerm = (term: number) => {
-    setSelectedTerm(term);
-  };
+  // 기간 선택 UI는 제거되었으나, 내부 상태는 유지합니다.
 
   const handleNext = () => {
-    if (!selectedProductId || !selectedTerm) return;
-    const selectedProduct = productsForTab.find((p) => p.id === selectedProductId);
+    if (!selectedProductId) return;
+    const selectedProduct = productsForTab.find((p) => p.accountTypeUniqueNo === selectedProductId);
     if (!selectedProduct) return;
 
-    // 다음 단계(입력 페이지)로 이동. 고정/자유/예금 모두 동일 페이지를 쓰되,
-    // 우선 고정 유형 경로에 맞춰 이동. 필요 시 유형별 분기 추가 가능.
+    // 다음 단계(입력 페이지)로 이동. 현재는 공통 입력 페이지를 사용.
+    // productType 매핑: 적금/챌린지 -> "fixed", 예금 -> "td"
+    const productType = selectedProduct.accountTypeName === "예금" ? "td" : "fixed";
+    const periodDays = selectedTerm || Number(selectedProduct.subscriptionPeriod) || 0;
+
     navigate("/buckets/fixed/input", {
       state: {
-        productId: selectedProduct.id,
-        productType: selectedProduct.type,
-        termMonths: selectedTerm,
+        productId: selectedProduct.accountTypeUniqueNo,
+        productType,
+        periodDays,
       },
     });
   };
 
-  const isNextEnabled = selectedProductId !== null && selectedTerm !== null;
+  const isNextEnabled = selectedProductId !== null;
 
   return (
     <Container>
@@ -124,74 +168,80 @@ const NewBucketStart = () => {
         ))}
       </Tabs>
 
-      <Hero>
-        <HeroTitle>{heroTitle}</HeroTitle>
-        <HeroRow>
-          <HeroLabel>주기</HeroLabel>
-          <HeroValue>매일</HeroValue>
-        </HeroRow>
-        <HeroRow>
-          <HeroLabel>금리(세전)</HeroLabel>
-          <HeroValue>
-            {selectedProduct
-              ? `${selectedProduct.baseRate.toFixed(1)}% ~ ${selectedProduct.maxRate.toFixed(1)}%`
-              : productsForTab[0]
-              ? `${productsForTab[0].baseRate.toFixed(1)}% ~ ${productsForTab[0].maxRate.toFixed(1)}%`
-              : "—"}
-          </HeroValue>
-        </HeroRow>
-        <HeroRow>
-          <HeroLabel>원금</HeroLabel>
-          <HeroValue>—</HeroValue>
-        </HeroRow>
-        <HeroRow>
-          <HeroLabel>이자</HeroLabel>
-          <HeroValue>—</HeroValue>
-        </HeroRow>
-      </Hero>
+      {loading ? (
+        <LoadingWrap>
+          <LoadingSpinner />
+        </LoadingWrap>
+      ) : error ? (
+        <ErrorBox>
+          <ErrorText>{error}</ErrorText>
+          <RetryButton onClick={() => {
+            setLoading(true);
+            setError(null);
+            setItems([]);
+            setSelectedProductId(null);
+            setSelectedTerm(null);
+            // 재조회
+            (async () => {
+              try {
+                const data = await getBucketCreateList();
+                setItems(data);
+              } catch (e: unknown) {
+                const message = e instanceof Error ? e.message : "목록 조회에 실패했습니다.";
+                setError(message);
+              } finally {
+                setLoading(false);
+              }
+            })();
+          }}>다시 시도</RetryButton>
+        </ErrorBox>
+      ) : (
+        <>
+          <SectionTitle>상품 선택</SectionTitle>
 
-      <SectionTitle>상품 선택</SectionTitle>
-
-      <Cards>
-        {productsForTab.map((p) => {
-          const isSelectedProduct = selectedProductId === p.id;
-          return (
-            <Card key={p.id} $selected={isSelectedProduct} onClick={() => handleSelectProduct(p.id)}>
-              <CardHeader>
-                <CardName>{p.name}</CardName>
-                <Rate>
-                  <RateItem>
-                    <RateLabel>기본</RateLabel>
-                    <RateValue>{p.baseRate.toFixed(1)}%</RateValue>
-                  </RateItem>
-                  <Divider />
-                  <RateItem>
-                    <RateLabel>최대</RateLabel>
-                    <RateValue>{p.maxRate.toFixed(1)}%</RateValue>
-                  </RateItem>
-                </Rate>
-              </CardHeader>
-
-              <Chips>
-                {p.terms.map((m) => (
-                  <Chip
-                    key={m}
-                    $active={isSelectedProduct && selectedTerm === m}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // 칩만 눌러도 선택 완료되도록 제품/기간 동시 설정
-                      setSelectedProductId(p.id);
-                      handleSelectTerm(m);
-                    }}
-                  >
-                    {m}개월
-                  </Chip>
-                ))}
-              </Chips>
-            </Card>
-          );
-        })}
-      </Cards>
+          <Cards>
+            {productsForTab.map((p) => {
+              const isSelectedProduct = selectedProductId === p.accountTypeUniqueNo;
+              const periodDays = Number(p.subscriptionPeriod) || 0;
+              return (
+                <Card
+                  key={p.accountTypeUniqueNo}
+                  $selected={isSelectedProduct}
+                  onClick={() => handleSelectProduct(p.accountTypeUniqueNo)}
+                >
+                  <CardHeader>
+                    <CardName>{p.accountName}</CardName>
+                    <Rate>
+                      <RateItem>
+                        <RateLabel>금리</RateLabel>
+                        <RateValue>{Number(p.interestRate)}%</RateValue>
+                      </RateItem>
+                    </Rate>
+                  </CardHeader>
+                  <Meta>
+                    <MetaRow>
+                      <MetaLabel>기간</MetaLabel>
+                      <MetaValue>{periodDays}일</MetaValue>
+                    </MetaRow>
+                    <MetaRow>
+                      <MetaLabel>한도</MetaLabel>
+                      <MetaValue>
+                        {Number(p.minSubscriptionBalance).toLocaleString()}원 ~ {Number(p.maxSubscriptionBalance).toLocaleString()}원
+                      </MetaValue>
+                    </MetaRow>
+                    {p.rateDescription && (
+                      <MetaRow>
+                        <MetaLabel>설명</MetaLabel>
+                        <MetaDesc>{p.rateDescription}</MetaDesc>
+                      </MetaRow>
+                    )}
+                  </Meta>
+                </Card>
+              );
+            })}
+          </Cards>
+        </>
+      )}
 
       <Bottom>
         <NextButton disabled={!isNextEnabled} onClick={handleNext}>
@@ -244,34 +294,6 @@ const TabButton = styled.button<{ $active: boolean }>`
   font-weight: 600;
 `;
 
-const Hero = styled.section`
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.secondary};
-  padding: 16px;
-  margin-bottom: 16px;
-`;
-
-const HeroTitle = styled.h2`
-  font-size: 16px;
-  margin: 0 0 8px;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const HeroRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-`;
-
-const HeroLabel = styled.span`
-  color: ${({ theme }) => theme.colors.lightGray};
-`;
-
-const HeroValue = styled.span`
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 600;
-`;
-
 const SectionTitle = styled.h3`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.text};
@@ -310,11 +332,7 @@ const Rate = styled.div`
   gap: 8px;
 `;
 
-const Divider = styled.div`
-  width: 1px;
-  height: 16px;
-  background: ${({ theme }) => theme.colors.lightGray};
-`;
+// 구분선 스타일은 현재 미사용입니다.
 
 const RateItem = styled.div`
   display: flex;
@@ -333,21 +351,65 @@ const RateValue = styled.span`
   font-weight: 700;
 `;
 
-const Chips = styled.div`
+const Meta = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
 `;
 
-const Chip = styled.button<{ $active: boolean }>`
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid
-    ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.lightGray)};
-  background: ${({ $active, theme }) => ($active ? theme.colors.secondary : theme.colors.white)};
-  color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.text)};
+const MetaRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
+const MetaLabel = styled.span`
+  color: ${({ theme }) => theme.colors.lightGray};
   font-size: 12px;
+`;
+
+const MetaValue = styled.span`
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 600;
+  font-size: 13px;
+`;
+
+const MetaDesc = styled.span`
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 12px;
+`;
+
+const LoadingWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+`;
+
+const ErrorBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: ${({ theme }) => theme.colors.secondary};
+  border: 1px solid ${({ theme }) => theme.colors.lightGray};
+  border-radius: 10px;
+  padding: 16px;
+`;
+
+const ErrorText = styled.p`
+  margin: 0;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const RetryButton = styled.button`
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  font-weight: 700;
 `;
 
 const Bottom = styled.div`
@@ -371,7 +433,9 @@ const NextButton = styled.button`
   color: ${({ theme }) => theme.colors.white};
   font-weight: 700;
   &:disabled {
-    opacity: 0.4;
+    opacity: 0.3;
+    filter: grayscale(40%);
+    cursor: not-allowed;
   }
 `;
 

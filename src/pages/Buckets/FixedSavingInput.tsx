@@ -1,14 +1,14 @@
-// 파일 목적: 고정 적금 입력 단계. 매일 납입 금액/실행 시간 입력 및 일정 요약 표시.
-// 주요 섹션: 상단 요약(금리), 입력 폼(금액/시간), 스케줄 텍스트, 다음 버튼.
-// 주의사항: 이전 화면에서 전달된 type/productId/periodDays(or termMonths) 사용. 이자/원금 계산 없음.
+// 파일 목적: 백엔드 상품 데이터를 기반으로 입력 단계를 구성합니다. (일반/챌린지/정기예금)
+// 주요 섹션: 상단 히어로(이자 세후, 안내), 금액 슬라이더 + 직접 입력, 약관/안내, 다음 버튼.
+// 주의사항: 실행 시간/스케줄 영역 제거. 최소·최대 금액을 슬라이더로 제한하며, 이자 계산은 단순 세후 공식 적용.
 
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
-import { savingProducts } from "../../api/mockDataSavingProducts";
 import { termsDocuments } from "../../api/mockDataTerms";
 import type { ProductType } from "../../api/mockDataSavingProducts";
+import { getBucketCreateList, type CreateListItem } from "../../api/getCreateList";
 
 type IncomingState = {
   productType?: ProductType;
@@ -42,39 +42,35 @@ const FixedSavingInput = () => {
     return 30; // 기본값(30일)
   }, [stateDays, qpDays, termMonths]);
 
+  // 백엔드 상품 상세: create_list에서 찾아 사용
+  const [list, setList] = useState<CreateListItem[]>([]);
   const product = useMemo(() => {
     if (!resolvedProductId) return undefined;
-    return savingProducts.find((p) => p.id === resolvedProductId);
-  }, [resolvedProductId]);
+    return list.find((i) => i.accountTypeUniqueNo === resolvedProductId);
+  }, [resolvedProductId, list]);
 
-  // 입력 상태: 금액(문자열; 천단위 포맷), 실행 시간("HH:MM")
-  const [amountInput, setAmountInput] = useState<string>("");
-  const [timeInput, setTimeInput] = useState<string>("09:00");
+  // 입력 상태: 금액(슬라이더/직접입력)
+  const [amount, setAmount] = useState<number>(0);
+  const [manualInput, setManualInput] = useState<boolean>(false);
+  const [amountInputText, setAmountInputText] = useState<string>("");
+  const [initialized, setInitialized] = useState<boolean>(false); // 최초 로드 여부
 
   // 초기 포커싱/기본값
   useEffect(() => {
-    if (amountInput === "") setAmountInput("0");
-  }, [amountInput]);
+    // 상품 목록 로드 및 초기 금액을 최소값으로 설정
+    (async () => {
+      try {
+        const data = await getBucketCreateList();
+        setList(data);
+      } catch {
+        // 네트워크 오류는 상단 히어로/입력만 표시하고 진행 가능(다음 단계에서 재검증)
+      }
+    })();
+  }, []);
 
-  // 금액 입력: 숫자만, 천단위 포맷
-  const formatThousand = (raw: string) => {
-    const digits = raw.replace(/[^0-9]/g, "");
-    if (digits === "") return "0";
-    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const parseAmountNumber = (formatted: string) => {
-    const digits = formatted.replace(/[^0-9]/g, "");
-    return Number(digits || 0);
-  };
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmountInput(formatThousand(e.target.value));
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTimeInput(e.target.value);
-  };
+  // 금액 포맷 헬퍼
+  const formatMoney = (n: number) => (isFinite(n) ? n.toLocaleString() : "0");
+  const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
 
   // 스케줄 텍스트 계산: 시작일(오늘), 기간 일수, 첫/마지막 실행일
   const today = useMemo(() => new Date(), []);
@@ -92,27 +88,64 @@ const FixedSavingInput = () => {
     return `${yyyy}.${mm}.${dd}`;
   };
 
-  const firstDate = today; // 간단 표기: 시작일=첫 실행일
-  const lastDate = useMemo(() => addDays(today, Math.max(resolvedDays - 1, 0)), [today, resolvedDays]);
+  const endDate = useMemo(() => addDays(today, Math.max(resolvedDays, 0)), [today, resolvedDays]);
 
   const handleNext = () => {
-    const isEnabled = parseAmountNumber(amountInput) > 0 && !!resolvedProductId && resolvedDays > 0;
+    const isEnabled = amount > 0 && !!resolvedProductId && resolvedDays > 0;
     if (!isEnabled) return;
-    // 다음 단계 라우트는 아직 정의하지 않음. 상태만 콘솔로 확인.
-    const amountNumber = parseAmountNumber(amountInput);
     navigate("/buckets/final-confirm", {
       state: {
         productType: resolvedType,
         productId: resolvedProductId,
         periodDays: resolvedDays,
-        amountPerDay: amountNumber,
-        executeTime: timeInput,
+        amountPerDay: amount, // td 에서는 일시 예치 금액으로 사용
       },
     });
   };
+  // 이자 세후 계산: (원금 × (이자율/100) × (일수/365)) × 0.846
+  const ratePercent = product ? Number(product.interestRate) || 0 : 0;
+  const minAmount = product ? Number(product.minSubscriptionBalance) || 0 : 0;
+  const maxAmount = product ? Number(product.maxSubscriptionBalance) || 0 : 0;
 
-  const baseRate = product?.baseRate;
-  const maxRate = product?.maxRate;
+  // 히어로 계산에 사용할 금액: 수기 입력이 최대 초과 시 최대값으로 계산
+  const amountForHero = useMemo(() => {
+    if (!product) return 0;
+    if (manualInput && amount > maxAmount) return maxAmount;
+    return amount;
+  }, [product, manualInput, amount, maxAmount]);
+
+  const principal = useMemo(() => {
+    if (!product) return 0;
+    if (resolvedType === "td") return amountForHero; // 정기예금: 일시 예치
+    return amountForHero * resolvedDays; // 일반/챌린지: 매일 납입 총액
+  }, [product, resolvedType, amountForHero, resolvedDays]);
+
+  const afterTaxInterest = useMemo(() => {
+    if (!product || ratePercent <= 0 || resolvedDays <= 0 || principal <= 0) return 0;
+    const interest = principal * (ratePercent / 100) * (resolvedDays / 365);
+    return Math.floor(interest * 0.846);
+  }, [product, ratePercent, resolvedDays, principal]);
+
+  // 초기값: 최초 로드시에만 최소금액으로 설정(사용자 입력 0은 유지)
+  useEffect(() => {
+    if (!product || initialized) return;
+    const min = Number(product.minSubscriptionBalance) || 0;
+    setAmount(min);
+    setAmountInputText((t) => (t === "" ? String(min) : t));
+    setInitialized(true);
+  }, [product, initialized]);
+
+  // accountDescription에서 is_challenge/description 추출
+  const { isChallenge, challengeDesc } = useMemo(() => {
+    if (!product) return { isChallenge: false, challengeDesc: "" };
+    try {
+      const obj = JSON.parse(product.accountDescription || "{}");
+      const flag = String(obj?.is_challenge).toLowerCase() === "true";
+      return { isChallenge: flag, challengeDesc: obj?.description || "" };
+    } catch {
+      return { isChallenge: false, challengeDesc: "" };
+    }
+  }, [product]);
 
   return (
     <Container>
@@ -123,70 +156,81 @@ const FixedSavingInput = () => {
       </TopBar>
 
       <Hero>
-        <HeroTitle>요약</HeroTitle>
+        <HeroTitle>{resolvedType === "td" ? "이렇게 맡기면" : "이렇게 모으면"}</HeroTitle>
         <HeroRow>
-          <HeroLabel>주기</HeroLabel>
-          <HeroValue>매일</HeroValue>
+          <HeroLabel>이자(세후)</HeroLabel>
+          <HeroValue>{formatMoney(afterTaxInterest)}원</HeroValue>
         </HeroRow>
-        <HeroRow>
-          <HeroLabel>금리(세전)</HeroLabel>
-          <HeroValue>
-            {baseRate !== undefined && maxRate !== undefined
-              ? `${baseRate.toFixed(1)}% ~ ${maxRate.toFixed(1)}%`
-              : "—"}
-          </HeroValue>
-        </HeroRow>
-        <HeroRow>
-          <HeroLabel>원금</HeroLabel>
-          <HeroValue>—</HeroValue>
-        </HeroRow>
-        <HeroRow>
-          <HeroLabel>이자</HeroLabel>
-          <HeroValue>—</HeroValue>
-        </HeroRow>
+        {resolvedType === "td" ? (
+          <HeroSub>
+            {`${formatDate(endDate)}에 받아요`}
+          </HeroSub>
+        ) : (
+          <HeroSub>
+            {`${formatDate(endDate)}까지 원금 ${formatMoney(principal)}원 모아요`}
+          </HeroSub>
+        )}
+        {resolvedType !== "td" && isChallenge && challengeDesc && (
+          <HeroDesc>{challengeDesc}</HeroDesc>
+        )}
       </Hero>
 
       <SectionTitle>입력</SectionTitle>
 
       <Field>
-        <Label>매일 납입 금액</Label>
-        <Input
-          type="text"
-          inputMode="numeric"
-          value={amountInput}
-          onChange={handleAmountChange}
-          aria-label="매일 납입 금액"
-        />
+        <Label>{resolvedType === "td" ? "예금액" : "매일 납입 금액"}</Label>
+        {product && (
+          <RangeWrap>
+            <RangeInput
+              type="range"
+              min={minAmount}
+              max={maxAmount}
+              step={1000}
+              value={clamp(amount, minAmount, maxAmount)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setAmount(clamp(Number(e.target.value) || 0, minAmount, maxAmount))
+              }
+              aria-label="금액 슬라이더"
+            />
+            <RangeMeta>
+              <span>{formatMoney(minAmount)}원</span>
+              <strong>{formatMoney(clamp(amount, minAmount, maxAmount))}원</strong>
+              <span>{formatMoney(maxAmount)}원</span>
+            </RangeMeta>
+          </RangeWrap>
+        )}
+        <InlineButtons>
+          <SmallButton onClick={() => {
+            setManualInput((v) => !v);
+            if (!manualInput) {
+              setAmountInputText(amount > 0 ? String(amount) : "");
+            }
+          }}>
+            {manualInput ? "슬라이더로 설정" : "직접 입력하기"}
+          </SmallButton>
+        </InlineButtons>
+        {manualInput && (
+          <Input
+            type="text"
+            inputMode="numeric"
+            value={amountInputText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const digits = e.target.value.replace(/[^0-9]/g, "");
+              setAmountInputText(digits);
+              setAmount(Number(digits || 0));
+            }}
+            aria-label="금액 직접 입력"
+          />
+        )}
+        <HelperText>내일부터 매일 아침 6시 반에 자동 이체돼요</HelperText>
+        {product && (amount < minAmount || amount > maxAmount) && (
+          <WarningText>
+            납입금액은 최소 {formatMoney(minAmount)}원 최대 {formatMoney(maxAmount)}원 입니다
+          </WarningText>
+        )}
       </Field>
 
-      <Field>
-        <Label>실행 시간</Label>
-        <Input type="time" value={timeInput} onChange={handleTimeChange} aria-label="실행 시간" />
-      </Field>
-
-      <SectionTitle>스케줄</SectionTitle>
-      <Schedule>
-        <ScheduleRow>
-          <span>시작일</span>
-          <strong>{formatDate(today)}</strong>
-        </ScheduleRow>
-        <ScheduleRow>
-          <span>기간</span>
-          <strong>{resolvedDays}일</strong>
-        </ScheduleRow>
-        <ScheduleRow>
-          <span>첫 실행일</span>
-          <strong>
-            {formatDate(firstDate)} {timeInput}
-          </strong>
-        </ScheduleRow>
-        <ScheduleRow>
-          <span>마지막 실행일</span>
-          <strong>
-            {formatDate(lastDate)} {timeInput}
-          </strong>
-        </ScheduleRow>
-      </Schedule>
+      {/* 스케줄 섹션 제거 */}
 
       {/* 약관/확인 섹션: InfoTerms 내용을 하단에 병합 */}
       <SectionTitle>약관/안내</SectionTitle>
@@ -238,8 +282,7 @@ const FixedSavingInput = () => {
                           productType: resolvedType,
                           productId: resolvedProductId,
                           periodDays: resolvedDays,
-                          amountPerDay: parseAmountNumber(amountInput),
-                          executeTime: timeInput,
+                          amountPerDay: amount,
                         },
                       })
                     }
@@ -255,7 +298,7 @@ const FixedSavingInput = () => {
       <Notice>심의필 문구 자리입니다. (예: 2025-XXX-XXXX)</Notice>
 
       <Bottom>
-        <NextButton disabled={parseAmountNumber(amountInput) <= 0} onClick={handleNext}>다음</NextButton>
+        <NextButton disabled={amount <= 0 || !product || (product && (amount < minAmount || amount > maxAmount))} onClick={handleNext}>다음</NextButton>
       </Bottom>
     </Container>
   );
@@ -314,6 +357,18 @@ const HeroValue = styled.span`
   font-weight: 600;
 `;
 
+const HeroSub = styled.p`
+  margin: 6px 0 0;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 13px;
+`;
+
+const HeroDesc = styled.p`
+  margin: 6px 0 0;
+  color: ${({ theme }) => theme.colors.lightGray};
+  font-size: 12px;
+`;
+
 const SectionTitle = styled.h3`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.text};
@@ -340,18 +395,7 @@ const Input = styled.input`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-const Schedule = styled.div`
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.secondary};
-  padding: 12px;
-  background: ${({ theme }) => theme.colors.white};
-`;
-
-const ScheduleRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-`;
+// 스케줄 스타일 제거
 
 const Bottom = styled.div`
   position: fixed;
@@ -433,6 +477,50 @@ const Paragraph = styled.p`
   color: ${({ theme }) => theme.colors.text};
   line-height: 1.5;
   font-size: 14px;
+`;
+
+const RangeWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const RangeInput = styled.input`
+  width: 100%;
+`;
+
+const RangeMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 12px;
+`;
+
+const InlineButtons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+`;
+
+const SmallButton = styled.button`
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.lightGray};
+  background: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const HelperText = styled.p`
+  margin: 8px 0 0;
+  color: ${({ theme }) => theme.colors.lightGray};
+  font-size: 12px;
+`;
+
+const WarningText = styled.p`
+  margin: 6px 0 0;
+  color: #d32f2f;
+  font-size: 12px;
 `;
 
 
