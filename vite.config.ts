@@ -1,16 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import svgr from "vite-plugin-svgr";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    // ✅ 먼저 SVGR가 .svg를 컴포넌트로 변환하게 두는 게 안전합니다
+    svgr({ svgrOptions: { svgProps: { overflow: 'visible' }, icon: false }, include: ['**/*.svg?react'] }),
+    react(),
+  ],
   server: {
     host: true,
     port: 5173,
     strictPort: true,
     hmr: {
       protocol: "wss",
-      host: "775828225ce3.ngrok-free.app", // ← 프로토콜 없이 도메인만!
+      host: "775828225ce3.ngrok-free.app",
       clientPort: 443,
     },
   },

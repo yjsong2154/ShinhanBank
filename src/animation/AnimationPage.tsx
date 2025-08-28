@@ -1,12 +1,11 @@
-import CharacterAnimation from './CharacterAnimation';
+import AvatarSOL from "../components/AvatarSOL/AvatarSOL";
 
-const AnimationPage = () => {
+export default function AniamtionPage() {
     return (
-        <div>
-            <h1>캐릭터 애니메이션 테스트 페이지</h1>
-            <CharacterAnimation />
+        <div style={{ padding: 24 }}>
+            <AvatarSOL state="idle" size={240} />
+            {/* 인사 모션 확인 */}
+            {/* <AvatarSOL state="wave" size={240} /> */}
         </div>
     );
-};
-
-export default AnimationPage;
+}

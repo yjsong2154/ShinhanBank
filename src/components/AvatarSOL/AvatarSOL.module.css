@@ -1,0 +1,53 @@
+/* src/components/AvatarSOL/AvatarSOL.module.css */
+.avatar {
+  display: inline-block;
+  line-height: 0;
+}
+
+/* SVG 변환 좌표계 안정화 */
+.avatar svg,
+.avatar #armR-inner {
+  transform-box: fill-box;
+}
+
+/* Idle: 전체 둥실 */
+.idle svg {
+  animation: idleFloat 3s ease-in-out infinite;
+}
+
+@keyframes idleFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Wave: 오른팔만 회전 (추후 state='wave'로 바꿔보세요) */
+.wave #armR-inner {
+  transform-origin: 0px 6px;
+  /* 어깨 근처로 조정 */
+  animation: waveHand 1.2s ease-in-out infinite;
+}
+
+@keyframes waveHand {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(-14deg);
+  }
+}
+
+/* 모션 저감 환경에서는 비활성화(테스트 끝난 뒤 켜세요)
+@media (prefers-reduced-motion: reduce) {
+  .idle svg, .wave #armR-inner { animation: none; }
+}
+*/
