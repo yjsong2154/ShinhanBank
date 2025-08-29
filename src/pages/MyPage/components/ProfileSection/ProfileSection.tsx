@@ -1,12 +1,12 @@
 import * as S from './ProfileSection.styles';
 import useUserInfo from '../../../../hooks/useUserInfo';
-import { USER_ID } from '../../../../api/config';
 import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner';
 
 const ProfileSection = () => {
-  // USER_ID가 null일 경우를 대비하여 빈 문자열을 전달합니다.
-  const { data: user, loading, error } = useUserInfo(USER_ID || '');
-  console.log("user", user);
+  const userId = sessionStorage.getItem('user_id');
+  console.log("userId", userId)// USER_ID가 null일 경우를 대비하여 빈 문자열을 전달합니다.
+  const { data: user, loading, error } = useUserInfo(userId || '');
+  
 
   if (loading) {
     // 로딩 중일 때 보여줄 UI

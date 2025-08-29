@@ -3,7 +3,6 @@ import * as S from "./SavingsDetailPage.styles";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import DetailPageHeader from "./components/SavingDetailPageHeader/SavingDetailPageHeader";
 import ProgressSection from "./components/ProgressSection/ProgressSection";
-import { USER_ID } from "../../api/config";
 
 const SavingsDetailPage = () => {
   const { data, loading, error } = useSavingsDetail();
@@ -23,8 +22,9 @@ const SavingsDetailPage = () => {
   const { bucket, comments } = data;
   const currentAmount = (bucket.current_progress / 100) * bucket.target_amount;
 
-  // 로그인된 사용자와 적금통 소유자 ID 비교
-  const isOwner = USER_ID === bucket.owner.id;
+  const userId = sessionStorage.getItem('user_id');
+  const isOwner = userId === String(bucket.owner.id);
+  console.log("Is Owner:", userId, bucket.owner.id, isOwner);
 
   return (
     <S.Container>
