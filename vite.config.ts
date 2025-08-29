@@ -15,10 +15,10 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
-    origin: "https://610c11e2c9d0.ngrok-free.app",
+    origin: "https://86fc00556aaa.ngrok-free.app",
     hmr: {
       protocol: "wss",
-      host: "610c11e2c9d0.ngrok-free.app",
+      host: "86fc00556aaa.ngrok-free.app",
       clientPort: 443,
     },
   }
