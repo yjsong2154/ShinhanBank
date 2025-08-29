@@ -34,13 +34,12 @@ const LoginPage = () => {
       });
 
       const responseData = await response.json();
-      console.log("Login Response:", responseData);
 
       if (response.ok) {
         sessionStorage.setItem("isLoggedIn", "true");
         // 200 또는 202 응답 처리
         if (response.status === 200) {
-          sessionStorage.setItem("user_id", responseData.user_id);
+          sessionStorage.setItem("user_id", responseData.user.id);
         } else if (response.status === 202) {
           // 업적 달성 등의 추가 정보 처리
           console.log("Achievement unlocked:", responseData);

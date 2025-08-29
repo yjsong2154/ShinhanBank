@@ -65,6 +65,7 @@ const fetchUserInfo = async (): Promise<User> => {
 const useUserInfo = (id: string) => {
   // id가 유효할 때만 fetch 하도록 조건 추가
   const shouldFetch = id && id.trim().length > 0;
+  console.log("useUserInfo id:", id);
 
   // fetcher 함수를 람다로 감싸서 인자를 전달하고, id를 의존성 배열에 추가
   return useFetch<User | null>(

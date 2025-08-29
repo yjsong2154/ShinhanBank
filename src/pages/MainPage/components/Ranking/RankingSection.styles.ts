@@ -34,3 +34,22 @@ export const EmptyRow = styled.div`
   text-align: center;
   color: #9a91b8;
 `;
+
+export const TabHeader = styled.div`
+  display: flex;
+  margin-bottom: 1rem;
+`;
+
+export const TabButton = styled.button<{ $isActive: boolean }>`
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: ${(props) => (props.$isActive ? props.theme.colors.primary : "#f0f0f0")};
+  color: ${(props) => (props.$isActive ? "#fff" : "#000")};
+  cursor: pointer;
+  border-radius: 0.5rem;
+  margin-right: 0.5rem;
+`;
+
+export const TabContent = styled.div`
+  /* Add any content-specific styles here */
+`;

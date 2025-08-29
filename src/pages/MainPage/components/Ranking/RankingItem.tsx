@@ -25,7 +25,7 @@ const RankingItem: React.FC<RankingItemProps> = ({
       <S.Rank>{rank}</S.Rank>
       {/* {profileUrl && <S.ProfileImage src={profileUrl} alt={`${name} 프로필`} />} */}
       <S.Name>{name}</S.Name>
-      <S.Amount>₩{amount.toLocaleString()}</S.Amount>
+      <S.Amount>{amount.toLocaleString()}점</S.Amount>
       {/* {isCrown && <S.CrownIcon src="/icons/crown.svg" alt="왕관" />} */}
     </S.Container>
   );
