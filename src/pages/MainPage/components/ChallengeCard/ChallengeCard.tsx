@@ -1,12 +1,19 @@
 import * as S from "./ChallengeCard.styles";
-import dartIcon from "../../../../assets/dart.png"; // dart 아이콘
+// import dartIcon from "../../../../assets/dart.png"; // dart 아이콘
 // import challengeImage from '../../assets/images/challenge-image.png';
 
 const ChallengeCard = () => {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    // 이미지가 로드되지 않았을 때 콘솔에 에러 메시지를 출력합니다.
+    console.error("Image loading failed:", e.currentTarget.src);
+    // 대체 이미지를 표시하거나 특정 동작을 추가할 수 있습니다.
+    // e.currentTarget.src = "/path/to/placeholder.png";
+  };
+
   return (
     <S.Container>
       <S.Title>
-        <S.TitleIcon src={dartIcon} alt="dart icon" />
+        <S.TitleIcon src="/dart.png" alt="dart icon" onError={handleImageError} />
         이번 주 챌린지
       </S.Title>
       <S.CardWrapper>

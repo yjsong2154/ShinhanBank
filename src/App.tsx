@@ -100,7 +100,7 @@ function AppContent() {
             }
           />
           <Route
-            path="/savings-settings/:id"
+            path="/save-settings/:id"
             element={
               isLoggedIn ? (
                 <SavingsSettingsPage />

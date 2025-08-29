@@ -21,5 +21,5 @@ export default defineConfig({
       host: "610c11e2c9d0.ngrok-free.app",
       clientPort: 443,
     },
-  },
+  }
 });
