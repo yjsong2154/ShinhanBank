@@ -1,8 +1,6 @@
 import React from "react";
 import * as S from "./FeedItem.styles";
 import Character from "../../../../components/Character/Character";
-import emptylikeIcon from "../../../../assets/icons/like_icon_empty.svg";
-import commentIcon from "../../../../assets/icons/comment_icon.svg";
 
 interface FeedItemProps {
   author: string;
@@ -54,11 +52,11 @@ const FeedItem: React.FC<FeedItemProps> = ({
 
         <S.ReactionInfo>
           <S.ReactionItem>
-            <img src={emptylikeIcon} alt="like icon" />
+            <img src="icons/like_icon_empty.svg" alt="like icon" />
             <S.ReactionCount>{likes}</S.ReactionCount>
           </S.ReactionItem>
           <S.ReactionItem>
-            <img src={commentIcon} alt="comment icon" />
+            <img src="icons/comment_icon.svg" alt="comment icon" />
             <S.ReactionCount>{comments}</S.ReactionCount>
           </S.ReactionItem>
         </S.ReactionInfo>

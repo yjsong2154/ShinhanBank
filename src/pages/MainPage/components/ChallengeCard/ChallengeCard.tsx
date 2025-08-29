@@ -1,6 +1,4 @@
 import * as S from "./ChallengeCard.styles";
-// import dartIcon from "../../../../assets/dart.png"; // dart 아이콘
-// import challengeImage from '../../assets/images/challenge-image.png';
 
 const ChallengeCard = () => {
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
