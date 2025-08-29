@@ -1,12 +1,12 @@
 import React from "react";
 import * as S from "./RankingItem.styles";
+import { getUniversityLogo } from "../../../../utils/university";
 
 interface RankingItemProps {
   rank: number;
   name: string;
   amount: number;
-  profileUrl?: string;
-  isCrown?: boolean;
+  universityId?: number;
   rowIndex?: number;
 }
 
@@ -14,19 +14,28 @@ const RankingItem: React.FC<RankingItemProps> = ({
   rank,
   name,
   amount,
-  profileUrl,
-  isCrown,
+  universityId,
   rowIndex = 0,
 }) => {
-  // console.log("remain : ", profileUrl, isCrown);
   const striped = rowIndex % 2 === 0;
+
   return (
     <S.Container $striped={striped}>
       <S.Rank>{rank}</S.Rank>
-      {/* {profileUrl && <S.ProfileImage src={profileUrl} alt={`${name} 프로필`} />} */}
+
+      <S.LogoWrapper>
+        <img
+          src={getUniversityLogo(universityId)}
+          alt={`${name} 로고`}
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src =
+              "/university/default.png";
+          }}
+        />
+      </S.LogoWrapper>
+
       <S.Name>{name}</S.Name>
       <S.Amount>{amount.toLocaleString()}점</S.Amount>
-      {/* {isCrown && <S.CrownIcon src="/icons/crown.svg" alt="왕관" />} */}
     </S.Container>
   );
 };
