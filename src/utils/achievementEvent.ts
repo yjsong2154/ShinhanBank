@@ -12,6 +12,8 @@ export interface AchievementPayload {
   itemName: string;
   // 원본 응답이 필요한 경우를 대비해 보관
   raw?: unknown;
+  // 알림 기반인 경우 읽음 처리를 위한 알림 ID
+  notificationId?: number;
 }
 
 // 커스텀 이벤트 타입 정의
