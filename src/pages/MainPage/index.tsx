@@ -5,6 +5,9 @@ import MySavingsStatus from "./components/MySavingsStatus/MySavingsStatus";
 import RankingSection from "./components/Ranking/RankingSection";
 import FeedSection from "./components/Feed/FeedSection";
 import NotificationIcon from "./components/NotificationIcon/NotificationIcon";
+import { fetchNotifications } from "../../api/notifications";
+import type { NotificationsResponse } from "../../api/notifications";
+import useFetch from "../../hooks/useFetch";
 
 const MainPage = () => {
   const navigate = useNavigate(); //저축통 버튼 관련
@@ -14,11 +17,15 @@ const MainPage = () => {
     navigate('/buckets/fixed');
   };
 
+  // 메인 진입 시 알림 목록을 조회하여 읽지 않은 알림 존재 여부를 계산
+  const { data } = useFetch<NotificationsResponse>(() => fetchNotifications(1, 500), []);
+  const hasNotification = (data?.counts.unread ?? 0) > 0;
+
   return (
     <S.Container>
       <S.Header>
         <S.Title>적금통 키우기</S.Title>
-        <NotificationIcon hasNotification={true} />
+        <NotificationIcon hasNotification={hasNotification} />
       </S.Header>
 
       <ChallengeCard />
