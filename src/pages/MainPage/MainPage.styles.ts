@@ -34,12 +34,21 @@ export const Title = styled.h1`
 export const CreateSavingsButton = styled.button`
   width: 100%;
   padding: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.colors.white};
-  font-size: 16px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.primary};
-  cursor: pointer;
   margin-top: 30px;
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #fff;
+  color: #9a77ff;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #9a77ff;
+    color: #fff;
+  }
+  &:active {
+    transform: translateY(1px);
+  }
 `;

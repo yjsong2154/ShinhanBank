@@ -1,46 +1,38 @@
-import * as S from './ProfileSection.styles';
-import useUserInfo from '../../../../hooks/useUserInfo';
-import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner';
+import * as S from "./ProfileSection.styles";
+import useUserInfo from "../../../../hooks/useUserInfo";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
+import { getUniversityLogo } from "../../../../utils/university";
 
 const ProfileSection = () => {
-  const userId = sessionStorage.getItem('user_id');
-  console.log("userId", userId)// USER_ID가 null일 경우를 대비하여 빈 문자열을 전달합니다.
-  const { data: user, loading, error } = useUserInfo(userId || '');
-  
+  const userId = sessionStorage.getItem("user_id");
+  const { data: user, loading, error } = useUserInfo(userId || "");
 
-  if (loading) {
-    // 로딩 중일 때 보여줄 UI
+  if (loading)
     return (
       <S.Container>
         <LoadingSpinner />
       </S.Container>
     );
-  }
-
-  if (error) {
-    // 에러 발생 시 보여줄 UI
-    return <S.Container>Error: {error}</S.Container>;
-  }
-
-  if (!user) {
-    // 사용자 정보가 없을 때 보여줄 UI
+  if (error) return <S.Container>Error: {error}</S.Container>;
+  if (!user)
     return <S.Container>사용자 정보를 불러올 수 없습니다.</S.Container>;
-  }
 
   return (
     <S.Container>
+      {/* ✅ 소속 대학 위쪽에 작게 */}
+      <S.UniversityRow>
+        <S.UnivLogo
+          src={getUniversityLogo(user.university.id)}
+          alt={`${user.university.name} 로고`}
+        />
+        <S.UniversityName>{user.university.name}</S.UniversityName>
+      </S.UniversityRow>
+
+      {/* ✅ 닉네임 + 이메일 */}
       <S.ProfileInfoWrapper>
         <S.Name>{user.nickname}</S.Name>
-        {/* API 응답의 email을 학번 대신 사용합니다 */}
         <S.StudentId>{user.email}</S.StudentId>
       </S.ProfileInfoWrapper>
-      <S.DetailInfoWrapper>
-        <S.InfoBox>
-          <S.InfoTitle>소속 대학</S.InfoTitle>
-          <S.InfoContent>{user.university.name}</S.InfoContent>
-        </S.InfoBox>
-        {/* '연결 계좌' 정보는 현재 API 응답에 없으므로 제거되었습니다. */}
-      </S.DetailInfoWrapper>
     </S.Container>
   );
 };

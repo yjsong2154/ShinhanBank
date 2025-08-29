@@ -18,7 +18,7 @@ export const DeleteAction = styled.button`
   top: 1px;
   right: 1px;
   bottom: 1px;
-  width: 100px; /* 미세 조정: 콘텐츠가 닫힌 상태에서 붉은색이 비치지 않도록 살짝 축소 */
+  width: 100px;
   background-color: #e74c3c;
   color: #ffffff;
   border-radius: 10px;

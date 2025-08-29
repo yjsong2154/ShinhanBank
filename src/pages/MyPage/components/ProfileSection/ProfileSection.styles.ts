@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   background-color: #f7f6ff;
@@ -7,11 +7,31 @@ export const Container = styled.div`
   margin-bottom: 20px;
 `;
 
+export const UniversityRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+`;
+
+export const UniversityName = styled.span`
+  font-size: 14px;
+  font-weight: 450;
+  color: #473350;
+`;
+
+export const UnivLogo = styled.img`
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+`;
+
+/* 아래쪽: 닉네임 + 이메일 */
 export const ProfileInfoWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 `;
 
 export const Name = styled.h2`
@@ -22,31 +42,6 @@ export const Name = styled.h2`
 
 export const StudentId = styled.p`
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.lightGray};
-  margin: 0;
-`;
-
-export const DetailInfoWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-`;
-
-export const InfoBox = styled.div`
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 15px;
-  flex: 1;
-`;
-
-export const InfoTitle = styled.p`
-  font-size: 12px;
-  color: ${({ theme }) => theme.colors.lightGray};
-  margin: 0 0 5px;
-`;
-
-export const InfoContent = styled.p`
-  font-size: 14px;
-  font-weight: bold;
+  color: #84708d;
   margin: 0;
 `;
