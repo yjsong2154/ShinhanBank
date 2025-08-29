@@ -30,6 +30,7 @@ const SavingsDetailPage = () => {
 
   const { bucket } = data;
   const currentAmount = (bucket.current_progress / 100) * bucket.target_amount;
+  // console.log("data:", data);
 
   const userId = sessionStorage.getItem('user_id');
   const isOwner = userId === String(bucket.owner.id);
@@ -41,7 +42,7 @@ const SavingsDetailPage = () => {
 
   return (
     <S.Container>
-      <DetailPageHeader title={bucket.name} showMenu={isOwner} />
+      <DetailPageHeader title={bucket.name} showMenu={isOwner} initialIsLiked={bucket.is_liked} />
 
       <S.InfoSection>
         <div>작성자 | {bucket.owner.nickname}</div>
