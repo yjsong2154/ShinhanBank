@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.section`
   padding: 15px;
@@ -21,23 +22,23 @@ export const TitleIcon = styled.span`
   margin-right: 20px;
 `;
 
-/* --- 가로 스크롤: 한 장만 중앙에, 좌우로 넘김 --- */
 export const ListWrapper = styled.div`
   margin-top: 14px;
+  padding: 0 12px;
 
-  /* 양 옆 페이드(옵션) */
+  /* 양 옆 페이드 */
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
-    black 16px,
-    black calc(100% - 16px),
+    black 24px,
+    black calc(100% - 12px),
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    black 16px,
-    black calc(100% - 16px),
+    black 24px,
+    black calc(100% - 12px),
     transparent 100%
   );
 `;
@@ -46,34 +47,46 @@ export const ScrollRow = styled.div`
   display: flex;
   gap: 30px;
   overflow-x: auto;
-  padding: 70px 6% 20px;
-
+  padding: 64px 0 20px;
   scroll-snap-type: x mandatory;
-  scroll-padding: 10%; /* 스냅 기준 패딩 */
-
+  scroll-padding: 12px;
   overscroll-behavior-x: contain;
 
   &::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
+
+  /* 마지막 카드도 가운데 정렬되게 */
+  &::before,
+  &::after {
+    content: "";
+    flex: 0 0 12px;
+  }
+`;
+
+export const CardLink = styled(Link)`
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  flex: 0 0 min(320px, calc(100% - 96px));
+  max-width: none;
+
+  scroll-snap-align: center;
 `;
 
 export const Card = styled.article`
+  --avatar: clamp(64px, 18vw, 88px);
   position: relative;
-  flex: 0 0 90%;
-  max-width: 520px;
-  margin: 0 auto;
-  padding-top: 70px;
-
-  /* 중앙 스냅 */
-  scroll-snap-align: center;
-
+  min-height: 240px;
+  padding-top: calc(var(--avatar) * 0.66);
   background: #eee3fa;
   border-radius: 18px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const CharacterBubble = styled.div`
@@ -81,17 +94,19 @@ export const CharacterBubble = styled.div`
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
+
+  width: var(--avatar);
+  height: var(--avatar);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
+
+  background: transparent;
+  box-shadow: none;
 
   & > * {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -116,6 +131,8 @@ export const CardDesc = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const Progress = styled.div`
@@ -179,8 +196,8 @@ export const EmptyMessage = styled.div`
   justify-content: center;
   align-items: center;
   padding: 3rem 1rem;
-  color: #473350; // theme.colors.gray_m
-  background-color: #f7f6ff; // theme.colors.gray_l
+  color: #473350;
+  background-color: #f7f6ff;
   border-radius: 8px;
   font-size: 1rem;
 `;

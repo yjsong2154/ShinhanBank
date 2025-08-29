@@ -30,7 +30,7 @@ const MySavingsStatus = () => {
         {savings && savings.length > 0 ? (
           <S.ScrollRow>
             {savings.map((item) => (
-              <Link to={`/savings/${item.id}`} key={item.id}>
+              <S.CardLink to={`/savings/${item.id}`} key={item.id}>
                 <S.Card>
                   <S.CharacterBubble>
                     <Character id={item.character.character_item.id} />
@@ -41,7 +41,9 @@ const MySavingsStatus = () => {
                     <S.CardDesc>{item.description}</S.CardDesc>
 
                     <S.Progress>
-                      <S.ProgressBar style={{ width: `${item.current_progress}%` }} />
+                      <S.ProgressBar
+                        style={{ width: `${item.current_progress}%` }}
+                      />
                       <S.ProgressText>{item.current_progress}%</S.ProgressText>
                     </S.Progress>
 
@@ -66,7 +68,7 @@ const MySavingsStatus = () => {
                     </S.MetaRow>
                   </S.CardBody>
                 </S.Card>
-              </Link>
+              </S.CardLink>
             ))}
           </S.ScrollRow>
         ) : (
