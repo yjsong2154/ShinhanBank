@@ -1,24 +1,32 @@
 import styled from 'styled-components';
 
+/**
+ * 알림 아이템 스와이프 UI 스타일 정의
+ */
+
 export const Container = styled.div`
-  /* 스와이프 컨테이너: 내부 콘텐츠를 잘라내기 위해 overflow hidden 적용 */
+  /* 스와이프 컨테이너: 모서리 라운드 및 내부 콘텐츠 클리핑 */
   position: relative;
   overflow: hidden;
   margin-bottom: 10px;
+  border-radius: 8px;
 `;
 
-export const DeleteBackground = styled.div`
+export const DeleteAction = styled.button`
+  /* 우측 고정 삭제 버튼 영역 */
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: 1px;
+  right: 1px;
+  bottom: 1px;
+  width: 100px; /* 미세 조정: 콘텐츠가 닫힌 상태에서 붉은색이 비치지 않도록 살짝 축소 */
   background-color: #e74c3c;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 24px;
   color: #ffffff;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: bold;
 `;
 
