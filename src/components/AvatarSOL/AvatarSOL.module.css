@@ -27,23 +27,88 @@
   }
 }
 
-/* Wave: 오른팔만 회전 (추후 state='wave'로 바꿔보세요) */
+/* Wave: 오른팔만 회전 (추후 state='wave'로 바꿔보세요) 
 .wave #armR-inner {
-  transform-origin: 0px 6px;
-  /* 어깨 근처로 조정 */
+  transform-origin: 15% 25%;
   animation: waveHand 1.2s ease-in-out infinite;
+}
+*/
+
+/* 변환 기준을 팔 그룹에 직접 지정 */
+.waveArm {
+  transform-box: fill-box;        /* SVG에서 퍼센트 transform-origin이 먹도록 */
+  transform-origin: 90% 0%;      /* 회전축 */
+  animation: waveHand 3s ease-in-out infinite;
 }
 
 @keyframes waveHand {
+  0%, 100% { transform: rotate(70deg); }
+  50%      { transform: rotate(20deg); }
+}
 
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
+/* --- 새로운 Idle 파츠 애니메이션 --- */
 
-  50% {
-    transform: rotate(-14deg);
+.waveArmIdle {
+  transform-box: fill-box;        /* SVG에서 퍼센트 transform-origin이 먹도록 */
+  transform-origin: 90% 0%;      /* 회전축 */
+  animation: waveHandIdle 3s ease-in-out infinite;
+}
+
+@keyframes waveHandIdle {
+  0%, 100% { transform: rotate(5deg); }
+  50%      { transform: rotate(-5deg); }
+}
+
+/* 1. 팔다리가 흔들리는 애니메이션 2개 정의 */
+@keyframes idleSwing { /* 팔 흔들기 */
+  from {
+    transform: rotate(-6deg);
   }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes idleKick { /* 다리 흔들기 */
+  from {
+    transform: rotate(20deg);
+  }
+  to {
+    transform: rotate(-20deg);
+  }
+}
+
+/* 2. 팔과 다리의 회전축 설정 */
+.idle #armL,
+.idle #armR {
+  transform-origin: 50% 20%; /* 어깨 (위쪽 중앙) */
+}
+
+.idle #legL,
+.idle #legR {
+  transform-origin: 50% 10%; /* 고관절 (위쪽 중앙) */
+}
+
+/* 3. 각 파츠에 애니메이션 적용 */
+.idle #armL,
+.idle #legL {
+  /* 1.5초 동안 swing/kick 애니메이션을 부드럽게 무한 반복 (정방향) */
+  animation: idleSwing 1.5s ease-in-out infinite alternate;
+}
+
+.idle #armR,
+.idle #legR {
+  /* 같은 애니메이션을 반대 방향으로 시작하여 교차하도록 설정 */
+  animation: idleSwing 1.5s ease-in-out infinite alternate-reverse;
+}
+
+/* 다리는 kick 애니메이션을 사용하도록 재정의 */
+.idle #legL {
+  animation-name: idleKick;
+}
+
+.idle #legR {
+  animation-name: idleKick;
 }
 
 /* 모션 저감 환경에서는 비활성화(테스트 끝난 뒤 켜세요)

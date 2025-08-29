@@ -24,14 +24,14 @@ const RankingItem: React.FC<RankingItemProps> = ({
       <S.Rank>{rank}</S.Rank>
 
       <S.LogoWrapper>
-        <img
+        {/* <img
           src={getUniversityLogo(universityId)}
           alt={`${name} 로고`}
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).src =
               "/university/default.png";
           }}
-        />
+        /> */}
       </S.LogoWrapper>
 
       <S.Name>{name}</S.Name>

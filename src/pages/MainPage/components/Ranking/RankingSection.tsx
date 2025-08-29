@@ -5,6 +5,7 @@ import RankingStage from "./RankingStage";
 import RankingItem from "./RankingItem";
 import { rankingData } from "../../../../api/mockData";
 import * as S from "./RankingSection.styles";
+import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner';
 
 type Row = { rank: number; name: string; amount: number; profileUrl?: string };
 
@@ -39,13 +40,37 @@ const renderRankingCard = (list: Row[]) => {
 };
 
 const RankingSection = () => {
-  const { data, loading, error } = useRanking('university');
+  const { data : universityData, loading : universityLoading, error : universityError } = useRanking('university');
+  const { data : majorData, loading : majorLoading, error : majorError } = useRanking('major');
 
   useEffect(() => {
-    console.log('Ranking Data:', data);
-    console.log('Loading:', loading);
-    console.log('Error:', error);
-  }, [data, loading, error]);
+    console.log('Ranking Data:', universityData);
+    console.log('Loading:', universityLoading);
+    console.log('Error:', universityError);
+    console.log('Major Ranking Data:', majorData);
+    console.log('Major Loading:', majorLoading);
+    console.log('Major Error:', majorError);
+  }, [universityData, universityLoading, universityError, majorData, majorLoading, majorError]);
+
+  // 2. 로딩 및 에러 상태 통합
+  const isLoading = majorLoading || universityLoading;
+  const error = majorError || universityError;
+
+  if (isLoading) {
+    return (
+      <S.Container>
+        <LoadingSpinner />
+      </S.Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <S.Container>
+        <S.EmptyRow>데이터를 불러오는 중 오류가 발생했습니다.</S.EmptyRow>
+      </S.Container>
+    );
+  }
 
   const tabs = [
     { name: "학과 랭킹", component: renderRankingCard(rankingData.department) },

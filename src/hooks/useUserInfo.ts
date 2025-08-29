@@ -57,11 +57,32 @@ const fetchUserInfo = async (): Promise<User> => {
   return data.user;
 };
 
+
+/**
+ * 특정 사용자 정보를 가져오는 비동기 함수
+ * @param id 사용자 ID
+ * @returns 사용자 정보
+ */
+export const fetchUserById = async (id: string): Promise<User> => {
+  const response = await fetch(`${API_PURL}/users/${id}`, {
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || '사용자 정보를 불러오는 데 실패했습니다.');
+  }
+
+  const data: UserApiResponse = await response.json();
+  return data.user;
+}
+
 /**
  * 사용자 정보를 가져오는 커스텀 훅
  * @param id 사용자 ID
  * @returns { data, loading, error }
  */
+
 const useUserInfo = (id: string) => {
   // id가 유효할 때만 fetch 하도록 조건 추가
   const shouldFetch = id && id.trim().length > 0;

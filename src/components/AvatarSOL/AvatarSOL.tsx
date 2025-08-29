@@ -26,24 +26,24 @@ const ROOT = 200;
 const px = (v: number) => v * ROOT;
 
 /** 각 파츠의 배치(비율 기준, 단위: 0~1)
- *  x,y: 좌상단 기준 위치
+ *  x,y: 좌.1 기준 위치
  *  w,h: 파츠 박스 크기 (뷰박스 비율 유지됨)
  *  값은 대략값이니 프로젝트 이미지에 맞게 미세조정만 하시면 됩니다.
  */
 const LAYOUT = {
-  head: { x: 0.2, y: 0.0, w: 0.5, h: 0.5 },
-  eyes: { x: 0.4, y: 0.2, w: 0.1, h: 0.1 },
-  mouth: { x: 0.3, y: 0.4, w: 0.1, h: 0.1 },
+  head: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
+  eyes: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
+  mouth: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
 
-  body: { x: 0.3, y: 0.6, w: 0.2, h: 0.2 },
+  body: { x: 0.44, y: 0.6, w: 0.237, h: 0.237 },
 
-  lArm: { x: 0.1, y: 0.5, w: 0.1, h: 0.1 },
-  rArm: { x: 0.1, y: 0.1, w: 0.1, h: 0.1 },
+  lArm: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
+  rArm: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
 
-  lLeg: { x: 0.1, y: 0.1, w: 0.1, h: 0.1 },
-  rLeg: { x: 0.1, y: 0.1, w: 0.1, h: 0.1 },
+  lLeg: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
+  rLeg: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
 
-  chick: { x: 0.3, y: 0.3, w: 0.5, h: 0.2 },
+  chick: { x: 0.1, y: 0.1, w: 0.9, h: 0.90 },
 } as const;
 
 export default function AvatarSOL({ size = 240, state = 'idle' }: Props) {
@@ -56,10 +56,16 @@ export default function AvatarSOL({ size = 240, state = 'idle' }: Props) {
 
         {/* 다리 */}
         <g id="legs">
-          <g transform={`translate(${px(LAYOUT.lLeg.x)},${px(LAYOUT.lLeg.y)})`}>
+          {/* 👇 이 부분에 id="legL" 추가 */}
+          <g id="legL" transform={`translate(${px(LAYOUT.lLeg.x)},${px(LAYOUT.lLeg.y)})`}>
+            <g
+            className={state === 'idle' ? styles.waveArmIdle : undefined}
+            >
             <LLeg width={px(LAYOUT.lLeg.w)} height={px(LAYOUT.lLeg.h)} preserveAspectRatio="xMidYMid meet" />
           </g>
-          <g transform={`translate(${px(LAYOUT.rLeg.x)},${px(LAYOUT.rLeg.y)})`}>
+          </g>
+          {/* 👇 이 부분에 id="legR" 추가 */}
+          <g id="legR" transform={`translate(${px(LAYOUT.rLeg.x)},${px(LAYOUT.rLeg.y)})`}>
             <RLeg width={px(LAYOUT.rLeg.w)} height={px(LAYOUT.rLeg.h)} preserveAspectRatio="xMidYMid meet" />
           </g>
         </g>
@@ -89,7 +95,10 @@ export default function AvatarSOL({ size = 240, state = 'idle' }: Props) {
           <LArm width={px(LAYOUT.lArm.w)} height={px(LAYOUT.lArm.h)} preserveAspectRatio="xMidYMid meet" />
         </g>
         <g id="armR" transform={`translate(${px(LAYOUT.rArm.x)},${px(LAYOUT.rArm.y)})`}>
-          <g id="armR-inner">
+          <g
+            id="armR-inner"
+            className={state === 'wave' ? styles.waveArm : undefined}
+          >
             <RArm width={px(LAYOUT.rArm.w)} height={px(LAYOUT.rArm.h)} preserveAspectRatio="xMidYMid meet" />
           </g>
         </g>
