@@ -1,28 +1,39 @@
 import { useNavigate } from "react-router-dom";
-import { myPageData } from "../../../api/mockData";
+import useSavings from "../../../hooks/useSavings";
 import Character from "../../../components/Character/Character";
 import * as S from "./SavingsSettingsList.styles";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 
 const SavingsSettingsList = () => {
   const navigate = useNavigate();
+  const { data: savingsList, loading, error } = useSavings();
 
-  const handleSavingsClick = () => {
-    navigate("/savings"); // /savings 페이지로 이동
+  const handleSavingsClick = (id: string) => {
+    navigate(`/save-settings/${id}`);
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <S.Container>
       <S.SectionTitle>적금통 설정</S.SectionTitle>
       <S.List>
-        {myPageData.savingsList.map((savings) => (
-          <S.Item key={savings.id} onClick={handleSavingsClick}>
+        {savingsList && savingsList.map((savings) => (
+          <S.Item key={savings.id} onClick={() => handleSavingsClick(savings.id)}>
             <S.CharacterWrapper>
-              {/* TODO: 각 저축통의 캐릭터 정보를 API로 받아와야 합니다. */}
-              <Character id="0" />
+              <Character 
+                id="0"
+              />
             </S.CharacterWrapper>
             <S.InfoWrapper>
-              <S.Title>{savings.title}</S.Title>
-              <S.ProgressInfo>{savings.progress}% 완료</S.ProgressInfo>
+              <S.Title>{savings.name}</S.Title>
+              <S.ProgressInfo>{savings.current_progress}% 완료</S.ProgressInfo>
             </S.InfoWrapper>
           </S.Item>
         ))}
