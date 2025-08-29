@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Link } from "react-router-dom";
 
 export const Container = styled.section`
@@ -159,16 +159,54 @@ export const ProgressBar = styled.div`
   border-radius: 999px;
   background: #e5e3f3;
   overflow: hidden;
-  margin-right: 10px; /* %/기간과 간격 */
+  margin-right: 10px;
 `;
 
+// ⬇️ 0% → $progress% 까지 차오르는 키프레임
+const fill = (to: number) => keyframes`
+  from { width: 0%; }
+  to   { width: ${to}%; }
+`;
+
+// ⬇️ 기존 Progress 교체
 export const Progress = styled.div<{ $progress: number }>`
   position: absolute;
   inset: 0 auto 0 0;
-  width: ${({ $progress }) => Math.max(0, Math.min(100, $progress))}%;
   background: #9a77ff;
   border-radius: 999px;
-  transition: width 0.3s ease;
+
+  /* 값 클램프 */
+  ${({ $progress }) => {
+    const to = Math.max(0, Math.min(100, $progress));
+    return css`
+      animation: ${fill(to)} 900ms ease-out forwards;
+    `;
+  }}
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    width: ${({ $progress }) => Math.max(0, Math.min(100, $progress))}%;
+    transition: width 0.3s ease;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.35),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shine 2.3s ease-out 0.15s forwards;
+  }
+  @keyframes shine {
+    to {
+      transform: translateX(100%);
+    }
+  }
 `;
 
 export const PercentLabel = styled.span`

@@ -37,9 +37,7 @@ const MySavingsStatus = () => {
                     <S.CardDesc>{item.description}</S.CardDesc>
 
                     <S.Progress>
-                      <S.ProgressBar
-                        style={{ width: `${item.current_progress}%` }}
-                      />
+                      <S.ProgressBar $percent={item.current_progress} />
                       <S.ProgressText>{item.current_progress}%</S.ProgressText>
                     </S.Progress>
 
