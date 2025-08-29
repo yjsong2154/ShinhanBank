@@ -137,7 +137,8 @@ const NewBucketStart = () => {
     const productType = selectedProduct.accountTypeName === "예금" ? "td" : "fixed";
     const periodDays = selectedTerm || Number(selectedProduct.subscriptionPeriod) || 0;
 
-    navigate("/buckets/fixed/input", {
+    // 이름/설명 입력 페이지로 먼저 이동
+    navigate("/buckets/info", {
       state: {
         productId: selectedProduct.accountTypeUniqueNo,
         productType,

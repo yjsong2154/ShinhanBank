@@ -15,6 +15,9 @@ type IncomingState = {
   productId?: string;
   periodDays?: number; // 선호: 일 단위 기간
   termMonths?: number; // 대체: 월 단위 기간(없으면 무시)
+  bucketName?: string;
+  bucketDescription?: string;
+  bucketPublic?: boolean;
 };
 
 const FixedSavingInput = () => {
@@ -23,7 +26,7 @@ const FixedSavingInput = () => {
   const [searchParams] = useSearchParams();
 
   // 전달 데이터 수신: location.state 우선, 없으면 URL 쿼리로 보조
-  const { productType, productId, periodDays: stateDays, termMonths } =
+  const { productType, productId, periodDays: stateDays, termMonths, bucketName, bucketDescription, bucketPublic } =
     (location.state as IncomingState) || {};
 
   const qpType = searchParams.get("type") as ProductType | null;
@@ -93,26 +96,46 @@ const FixedSavingInput = () => {
   const handleNext = () => {
     const isEnabled = amount > 0 && !!resolvedProductId && resolvedDays > 0;
     if (!isEnabled) return;
-    navigate("/buckets/final-confirm", {
+    navigate("/buckets/character-setup", {
       state: {
         productType: resolvedType,
         productId: resolvedProductId,
         periodDays: resolvedDays,
         amountPerDay: amount, // td 에서는 일시 예치 금액으로 사용
+        bucketName,
+        bucketDescription,
+        bucketPublic,
       },
     });
   };
   // 이자 세후 계산: (원금 × (이자율/100) × (일수/365)) × 0.846
   const ratePercent = product ? Number(product.interestRate) || 0 : 0;
-  const minAmount = product ? Number(product.minSubscriptionBalance) || 0 : 0;
-  const maxAmount = product ? Number(product.maxSubscriptionBalance) || 0 : 0;
+  // 백엔드 최소/최대는 총 금액 기준 → 일 납입 금액 한도를 기간으로 나누어 산출
+  const totalMin = product ? Number(product.minSubscriptionBalance) || 0 : 0;
+  const totalMax = product ? Number(product.maxSubscriptionBalance) || 0 : 0;
+  const isTermDeposit = resolvedType === "td";
+  const safeDays = Math.max(resolvedDays || 0, 0);
+  const minPerUnit = product
+    ? isTermDeposit
+      ? totalMin
+      : safeDays > 0
+      ? Math.ceil(totalMin / safeDays)
+      : 0
+    : 0;
+  const maxPerUnit = product
+    ? isTermDeposit
+      ? totalMax
+      : safeDays > 0
+      ? Math.floor(totalMax / safeDays)
+      : 0
+    : 0;
 
   // 히어로 계산에 사용할 금액: 수기 입력이 최대 초과 시 최대값으로 계산
   const amountForHero = useMemo(() => {
     if (!product) return 0;
-    if (manualInput && amount > maxAmount) return maxAmount;
+    if (manualInput && amount > maxPerUnit) return maxPerUnit;
     return amount;
-  }, [product, manualInput, amount, maxAmount]);
+  }, [product, manualInput, amount, maxPerUnit]);
 
   const principal = useMemo(() => {
     if (!product) return 0;
@@ -126,14 +149,14 @@ const FixedSavingInput = () => {
     return Math.floor(interest * 0.846);
   }, [product, ratePercent, resolvedDays, principal]);
 
-  // 초기값: 최초 로드시에만 최소금액으로 설정(사용자 입력 0은 유지)
+  // 초기값: 최초 로드시에만 일 납입 최소 금액(정기예금은 총 금액 최소)으로 설정
   useEffect(() => {
     if (!product || initialized) return;
-    const min = Number(product.minSubscriptionBalance) || 0;
-    setAmount(min);
-    setAmountInputText((t) => (t === "" ? String(min) : t));
+    const initMin = minPerUnit;
+    setAmount(initMin);
+    setAmountInputText((t) => (t === "" ? String(initMin) : t));
     setInitialized(true);
-  }, [product, initialized]);
+  }, [product, initialized, minPerUnit]);
 
   // accountDescription에서 is_challenge/description 추출
   const { isChallenge, challengeDesc } = useMemo(() => {
@@ -183,19 +206,19 @@ const FixedSavingInput = () => {
           <RangeWrap>
             <RangeInput
               type="range"
-              min={minAmount}
-              max={maxAmount}
-              step={1000}
-              value={clamp(amount, minAmount, maxAmount)}
+              min={minPerUnit}
+              max={maxPerUnit}
+              step={1}
+              value={clamp(amount, minPerUnit, maxPerUnit)}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setAmount(clamp(Number(e.target.value) || 0, minAmount, maxAmount))
+                setAmount(clamp(Number(e.target.value) || 0, minPerUnit, maxPerUnit))
               }
               aria-label="금액 슬라이더"
             />
             <RangeMeta>
-              <span>{formatMoney(minAmount)}원</span>
-              <strong>{formatMoney(clamp(amount, minAmount, maxAmount))}원</strong>
-              <span>{formatMoney(maxAmount)}원</span>
+              <span>{formatMoney(minPerUnit)}원</span>
+              <strong>{formatMoney(clamp(amount, minPerUnit, maxPerUnit))}원</strong>
+              <span>{formatMoney(maxPerUnit)}원</span>
             </RangeMeta>
           </RangeWrap>
         )}
@@ -223,9 +246,9 @@ const FixedSavingInput = () => {
           />
         )}
         <HelperText>내일부터 매일 아침 6시 반에 자동 이체돼요</HelperText>
-        {product && (amount < minAmount || amount > maxAmount) && (
+        {product && (amount < minPerUnit || amount > maxPerUnit) && (
           <WarningText>
-            납입금액은 최소 {formatMoney(minAmount)}원 최대 {formatMoney(maxAmount)}원 입니다
+            납입금액은 최소 {formatMoney(minPerUnit)}원 최대 {formatMoney(maxPerUnit)}원 입니다
           </WarningText>
         )}
       </Field>
@@ -298,7 +321,7 @@ const FixedSavingInput = () => {
       <Notice>심의필 문구 자리입니다. (예: 2025-XXX-XXXX)</Notice>
 
       <Bottom>
-        <NextButton disabled={amount <= 0 || !product || (product && (amount < minAmount || amount > maxAmount))} onClick={handleNext}>다음</NextButton>
+        <NextButton disabled={amount <= 0 || !product || (product && (amount < minPerUnit || amount > maxPerUnit))} onClick={handleNext}>다음</NextButton>
       </Bottom>
     </Container>
   );

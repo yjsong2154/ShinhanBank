@@ -8,6 +8,8 @@ import NewBucketStart from "./pages/Buckets/NewBucketStart";
 import FixedSavingInput from "./pages/Buckets/FixedSavingInput";
 import PdfViewer from "./pages/Buckets/PdfViewer";
 import FinalConfirm from "./pages/Buckets/FinalConfirm";
+import BucketInfoInput from "./pages/Buckets/BucketInfoInput";
+import CharacterSetup from "./pages/Buckets/CharacterSetup";
 import Complete from "./pages/Buckets/Complete";
 import MainPage from "./pages/MainPage";
 import SavingsDetailPage from "./pages/SavingsDetailPage";
@@ -154,8 +156,16 @@ function AppContent() {
             element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
           />
           <Route
+            path="/buckets/info"
+            element={isLoggedIn ? <BucketInfoInput /> : <Navigate to="/login" replace />}
+          />
+          <Route
             path="/buckets/fixed/input"
             element={isLoggedIn ? <FixedSavingInput /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/character-setup"
+            element={isLoggedIn ? <CharacterSetup /> : <Navigate to="/login" replace />}
           />
           <Route
             path="/buckets/pdf/:docId"
