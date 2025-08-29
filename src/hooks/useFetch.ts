@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { NOTIFICATIONS_UPDATED } from '../utils/notificationEvent.ts';
 
 // 제네릭 타입을 T로 선언합니다.
 const useFetch = <T,>(fetcher: () => Promise<T>, deps: React.DependencyList = []) => {
@@ -21,6 +22,13 @@ const useFetch = <T,>(fetcher: () => Promise<T>, deps: React.DependencyList = []
     };
 
     fetchData();
+
+    // 알림 상태 갱신 이벤트가 발생하면 동일 fetcher로 재조회
+    const onUpdated = () => {
+      fetchData();
+    };
+    window.addEventListener(NOTIFICATIONS_UPDATED, onUpdated);
+    return () => window.removeEventListener(NOTIFICATIONS_UPDATED, onUpdated);
   }, deps); // 의존성 배열을 외부에서 받습니다.
 
   return { data, loading, error };

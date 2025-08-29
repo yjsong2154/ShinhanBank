@@ -23,6 +23,7 @@ import AnimationPage from "./animation/AnimationPage";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import BucketInfoInput from "./pages/Buckets/BucketInfoInput";
 import CharacterSetup from "./pages/Buckets/CharacterSetup";
+import AchievementModalHost from "./components/AchievementModal/AchievementModalHost";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function AppContent() {
       <GlobalStyle />
       <ProgressGlobal />
       <ScrollToTop />
+      <AchievementModalHost />
       <div
         style={{
           paddingBottom: shouldHideFooter

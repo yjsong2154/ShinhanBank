@@ -5,10 +5,14 @@ import DetailPageHeader from "./components/SavingDetailPageHeader/SavingDetailPa
 import ProgressSection from "./components/ProgressSection/ProgressSection";
 import CommentForm from "./components/CommentForm";
 import { useState, useEffect } from "react";
+import useUserInfo from "../../hooks/useUserInfo";
 
 const SavingsDetailPage = () => {
   const { data, loading, error } = useSavingsDetail();
   const [comments, setComments] = useState(data?.comments || []);
+  // 현재 로그인 사용자의 닉네임을 가져와, 서버 응답에 nickname이 누락된 경우 보완
+  const sessionUserId = typeof window !== 'undefined' ? sessionStorage.getItem('user_id') || '' : '';
+  const { data: me } = useUserInfo(sessionUserId);
 
   useEffect(() => {
     if (data) {
@@ -36,8 +40,16 @@ const SavingsDetailPage = () => {
   const isOwner = userId === String(bucket.owner.id);
   console.log("Is Owner:", userId, bucket.owner.id, isOwner);
 
-  const handleCommentCreated = (newComment: any) => {
-    setComments((prevComments) => [...prevComments, newComment]);
+  const handleCommentCreated = (comment: any) => {
+    // 새 댓글 렌더링 시 현재 로그인 사용자 닉네임으로 표시
+    const enriched = {
+      ...comment,
+      author: {
+        ...(comment?.author || {}),
+        nickname: me?.nickname || '나',
+      },
+    };
+    setComments((prevComments) => [...prevComments, enriched]);
   };
 
   return (

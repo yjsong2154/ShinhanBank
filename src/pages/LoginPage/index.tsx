@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as S from "./LoginPage.styles";
 import { API_URL } from "../../api/config";
+import { dispatchAchievementUnlocked } from "../../utils/achievementEvent";
 
 // 로그인 페이지 컴포넌트
 const LoginPage = () => {
@@ -41,8 +42,14 @@ const LoginPage = () => {
         if (response.status === 200) {
           sessionStorage.setItem("user_id", responseData.user.id);
         } else if (response.status === 202) {
-          // 업적 달성 등의 추가 정보 처리
-          console.log("Achievement unlocked:", responseData);
+          // 업적 달성 응답 처리: 전역 모달 이벤트 발생
+          const first = responseData.achievements?.list?.[0] || null;
+          if (first) {
+            const title = first.title || "";
+            const itemName = first.rewards?.[0]?.itemName || "";
+            const message = responseData.message || "축하합니다! 새로운 업적을 달성했습니다!";
+            dispatchAchievementUnlocked({ message, title, itemName, raw: responseData });
+          }
         }
         navigate("/");
       } else {

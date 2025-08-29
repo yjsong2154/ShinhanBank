@@ -63,4 +63,16 @@ export const readAllNotifications = async (): Promise<void> => {
   }
 };
 
+/**
+ * 단일 알림을 읽음 처리합니다.
+ */
+export const readNotification = async (id: number): Promise<void> => {
+  const response = await apiClient(`${API_URL}/notification/${id}`, {
+    method: 'PATCH',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to mark notification as read');
+  }
+};
+
 
