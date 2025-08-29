@@ -77,22 +77,29 @@ export const Reward = styled.span`
   font-weight: 700;
 `;
 
-/* 완료 리스트용 기존 스타일 유지 */
 export const ChallengeItem = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* 세로 배치 */
   padding: 15px;
   border-bottom: 1px solid #e0e0e0;
+
   &:last-child {
     border-bottom: none;
   }
+`;
+
+export const ChallengeHeader = styled.div`
+  display: flex;
+  justify-content: space-between; /* 제목과 완료 사이 간격 */
+  align-items: center;
+  margin-bottom: 6px;
 `;
 
 export const ChallengeInfo = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 export const Title = styled.span`
   font-size: 16px;
   font-weight: bold;
@@ -104,8 +111,15 @@ export const Title = styled.span`
 export const StampGrid = styled.div`
   margin-top: 12px;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, 1fr); // 기본은 한 줄에 7개
   gap: 10px;
+
+  /* 화면이 작아지면 2줄로 */
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(4, 1fr); // 첫 줄에 최대 4개
+    grid-auto-rows: auto;
+    justify-content: center;
+  }
 `;
 
 export const StampItem = styled.div`
@@ -128,7 +142,7 @@ export const DateText = styled.span`
 
 export const RightInfo = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
 `;
