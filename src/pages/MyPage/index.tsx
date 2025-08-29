@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileSection from "./components/ProfileSection/ProfileSection";
 import MyCharacter from "./components/MyCharacter/MyCharacter";
 import MySavingsList from "./components/MySavingsList/MySavingsList";
-import ChallengeHistory from "./components/ChallengeHistory/ChallengeHistory";
+// import ChallengeHistory from "./components/ChallengeHistory/ChallengeHistory";
 import { API_URL } from "../../api/config";
 import { useState } from "react";
 
@@ -55,7 +55,7 @@ const MyPage = () => {
       <ProfileSection />
       <MyCharacter />
       <MySavingsList />
-      <ChallengeHistory />
+      {/* <ChallengeHistory /> */}
 
       <S.AccountSetting>
         <S.SettingItem onClick={() => navigate("/account-settings")}>

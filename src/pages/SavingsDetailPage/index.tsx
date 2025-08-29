@@ -3,9 +3,18 @@ import * as S from "./SavingsDetailPage.styles";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import DetailPageHeader from "./components/SavingDetailPageHeader/SavingDetailPageHeader";
 import ProgressSection from "./components/ProgressSection/ProgressSection";
+import CommentForm from "./components/CommentForm";
+import { useState, useEffect } from "react";
 
 const SavingsDetailPage = () => {
   const { data, loading, error } = useSavingsDetail();
+  const [comments, setComments] = useState(data?.comments || []);
+
+  useEffect(() => {
+    if (data) {
+      setComments(data.comments);
+    }
+  }, [data]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -19,12 +28,16 @@ const SavingsDetailPage = () => {
     return <div>데이터를 찾을 수 없습니다.</div>;
   }
 
-  const { bucket, comments } = data;
+  const { bucket } = data;
   const currentAmount = (bucket.current_progress / 100) * bucket.target_amount;
 
   const userId = sessionStorage.getItem('user_id');
   const isOwner = userId === String(bucket.owner.id);
   console.log("Is Owner:", userId, bucket.owner.id, isOwner);
+
+  const handleCommentCreated = (newComment: any) => {
+    setComments((prevComments) => [...prevComments, newComment]);
+  };
 
   return (
     <S.Container>
@@ -57,6 +70,7 @@ const SavingsDetailPage = () => {
             <strong>{comment.author.nickname}</strong>: {comment.content}
           </div>
         ))}
+        <CommentForm bucketId={String(bucket.id)} onCommentCreated={handleCommentCreated} />
       </S.CommentSection>
     </S.Container>
   );

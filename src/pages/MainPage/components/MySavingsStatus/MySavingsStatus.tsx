@@ -1,9 +1,5 @@
-import { Link } from "react-router-dom";
 import * as S from "./MySavingsStatus.styles";
 import Character from "../../../../components/Character/Character";
-import pigIcon from "../../../../assets/icons/pig.svg";
-import emptylikeIcon from "../../../../assets/icons/like_icon_empty.svg";
-import commentIcon from "../../../../assets/icons/comment_icon.svg";
 import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 import useSavings from "../../../../hooks/useSavings";
 
@@ -22,7 +18,7 @@ const MySavingsStatus = () => {
     <S.Container>
       <S.Title>
         <S.TitleIcon>
-          <img src={pigIcon} alt="pig icon" />
+          <img src="/icons/pig.svg" alt="pig icon" />
         </S.TitleIcon>
         나의 적금통 현황
       </S.Title>
@@ -50,7 +46,7 @@ const MySavingsStatus = () => {
                     <S.MetaRow>
                       <S.MetaItem type="button" aria-label="좋아요">
                         <S.MetaIcon
-                          src={emptylikeIcon}
+                          src="/icons/like_icon_empty.svg"
                           alt="좋아요"
                           aria-hidden="true"
                         />
@@ -59,7 +55,7 @@ const MySavingsStatus = () => {
 
                       <S.MetaItem type="button" aria-label="댓글">
                         <S.MetaIcon
-                          src={commentIcon}
+                          src="icons/comment_icon.svg"
                           alt="댓글"
                           aria-hidden="true"
                         />

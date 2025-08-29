@@ -3,8 +3,6 @@ import Character from "../../../../components/Character/Character";
 import useSavings from "../../../../hooks/useSavings";
 import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 import * as S from "./MySavingsList.styles";
-import heartIcon from "../../../../assets/icons/like_icon_empty.svg";
-import commentIcon from "../../../../assets/icons/comment_icon.svg";
 
 type WithSocial = {
   likes?: number;
@@ -70,11 +68,11 @@ const MySavingsList = () => {
                     {/* ✅ 좋아요/댓글은 항상 출력, 값 없으면 0 */}
                     <S.Reactions>
                       <S.Reaction>
-                        <img src={heartIcon} alt="likes" />
+                        <img src="/icons/like_icon_empty.svg" alt="likes" />
                         {item.likes ?? 0}
                       </S.Reaction>
                       <S.Reaction>
-                        <img src={commentIcon} alt="comments" />
+                        <img src="/icons/comment_icon.svg" alt="comments" />
                         {item.comments ?? 0}
                       </S.Reaction>
                     </S.Reactions>
