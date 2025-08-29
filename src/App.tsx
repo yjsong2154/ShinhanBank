@@ -21,6 +21,8 @@ import TermsOfServicePage from "./pages/TermsOfServicePage";
 import AccountSettingsPage from "./pages/AccountSettingsPage";
 import AnimationPage from "./animation/AnimationPage";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import BucketInfoInput from "./pages/Buckets/BucketInfoInput";
+import CharacterSetup from "./pages/Buckets/CharacterSetup";
 
 function App() {
   return (
@@ -144,8 +146,16 @@ function AppContent() {
             element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
           />
           <Route
+            path="/buckets/info"
+            element={isLoggedIn ? <BucketInfoInput /> : <Navigate to="/login" replace />}
+          />
+          <Route
             path="/buckets/fixed/input"
             element={isLoggedIn ? <FixedSavingInput /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/buckets/character-setup"
+            element={isLoggedIn ? <CharacterSetup /> : <Navigate to="/login" replace />}
           />
           <Route
             path="/buckets/pdf/:docId"

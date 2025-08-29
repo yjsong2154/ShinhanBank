@@ -1,15 +1,14 @@
-// 파일 목적: 개설 최종 확인 단계. 이전 단계 state 요약 표시 및 개설 API 호출.
-// 주요 섹션: 상단 헤더/요약(주기·금액·기간, 금리 세전 base~max), 확인 버튼 → 모의 API 호출.
-// 주의사항: 원금/이자 계산 없음. API는 모의(openBucket) 사용. 실패 시 alert 토스트 대체.
+// 파일 목적: 최종 확인 단계. 요약(저금액/가입기간/금리/출금계좌) 표시 후 적금통 생성 API 호출.
+// 주요 섹션: 타이틀/요약 섹션/캐릭터 섹션(추후)/확인 버튼. 성공 시 완료 페이지로 이동.
+// 주의사항: 금리는 create_list에서 조회한 interestRate 사용. 캐릭터/출금계좌는 추후 추가 예정.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
-import { savingProducts } from "../../api/mockDataSavingProducts";
 import type { ProductType } from "../../api/mockDataSavingProducts";
-import type { OpenBucketRequest } from "../../api/createSavings";
-import { openBucket } from "../../api/createSavings";
+import { getBucketCreateList, type CreateListItem } from "../../api/getCreateList";
+import { createBucket } from "../../api/createBucket";
 
 type IncomingState = {
   productType?: ProductType;
@@ -18,6 +17,9 @@ type IncomingState = {
   amountPerDay?: number; // fixed/flexible
   executeTime?: string; // HH:MM
   // td 의 경우 amountPerDay를 일시 예치 금액으로 사용
+  bucketName?: string;
+  bucketDescription?: string;
+  bucketPublic?: boolean;
 };
 
 const FinalConfirm = () => {
@@ -25,30 +27,35 @@ const FinalConfirm = () => {
   const location = useLocation();
   const state = (location.state || {}) as IncomingState;
 
+  // 상품 정보: create_list에서 찾기
+  const [list, setList] = useState<CreateListItem[]>([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getBucketCreateList();
+        setList(data);
+      } catch {
+        // 네트워크 오류 시 금리 표시는 생략
+      }
+    })();
+  }, []);
   const product = useMemo(
-    () => savingProducts.find((p) => p.id === state.productId),
-    [state.productId]
+    () => list.find((i) => i.accountTypeUniqueNo === state.productId),
+    [list, state.productId]
   );
 
   const [submitting, setSubmitting] = useState(false);
 
   const amount = state.amountPerDay || 0;
-  const time = state.executeTime || "09:00";
   const days = state.periodDays || 0;
   const type = state.productType || "fixed";
+  const name = state.bucketName || "제 첫 적금통 입니다.";
+  const description = state.bucketDescription || "졸업할때까지 1억을 모으려고 합니다.";
+  const isPublicFlag = state.bucketPublic !== false; // 기본값 공개
+  // 총액 계산: 정기예금(td)은 일시 예치이므로 amount 그대로, 그 외는 일수 × 일 납입 금액
+  const targetAmount = useMemo(() => (type === "td" ? amount : days * amount), [type, amount, days]);
 
-  const summaryText = useMemo(() => {
-    switch (type) {
-      case "fixed":
-        return `매일 ${time} · ${amount.toLocaleString()}원 / 기간 ${days}일`;
-      case "flexible":
-        return `매일 ${time} · ${amount.toLocaleString()}원 자동이체 / 기간 ${days}일`;
-      case "td":
-        return `일시 예치 ${amount.toLocaleString()}원 / 기간 ${days}일`;
-      default:
-        return "";
-    }
-  }, [type, time, amount, days]);
+  const interestRate = product ? Number(product.interestRate) || 0 : 0;
 
   const handleConfirm = async () => {
     if (!state.productId || !days || !amount) {
@@ -56,31 +63,29 @@ const FinalConfirm = () => {
       alert("입력 값이 부족합니다.");
       return;
     }
-    const req: OpenBucketRequest = {
-      productType: type,
-      productId: state.productId,
-      periodDays: days,
-      amount,
-      executeTime: type !== "td" ? time : undefined,
-    };
 
     setSubmitting(true);
     try {
-      const res = await openBucket(req);
-      if (res.success) {
-        navigate("/buckets/complete", {
-          state: {
-            bucketId: res.bucketId,
-            productType: type,
-            periodDays: days,
-            amount,
-            executeTime: type !== "td" ? time : undefined,
-          },
-        });
-      } else {
-        // eslint-disable-next-line no-alert
-        alert(res.message || "개설에 실패했습니다.");
-      }
+      const res = await createBucket({
+        name,
+        description,
+        accountTypeUniqueNo: state.productId,
+        target_amount: targetAmount,
+        is_public: isPublicFlag ? "TRUE" : "FALSE",
+        deposit_cycle: "daily",
+        character_item_id: 1,
+        outfit_item_id: 4,
+        hat_item_id: 7,
+      });
+
+      navigate("/buckets/complete", {
+        state: {
+          bucketId: (res && (res as any).bucketId) || undefined,
+          productType: type,
+          periodDays: days,
+          amount,
+        },
+      });
     } catch (e) {
       // eslint-disable-next-line no-alert
       alert("개설 중 오류가 발생했습니다.");
@@ -93,29 +98,33 @@ const FinalConfirm = () => {
     <Container>
       <TopBar>
         <BackButton />
-        <TopTitle>최종 확인</TopTitle>
+        <TopTitle>이렇게 시작할게요</TopTitle>
         <div style={{ width: 24 }} />
       </TopBar>
 
       <Hero>
-        <HeroTitle>요약</HeroTitle>
         <HeroRow>
-          <HeroLabel>내용</HeroLabel>
-          <HeroValue>{summaryText}</HeroValue>
+          <HeroLabel>저금액</HeroLabel>
+          <HeroValue>매일 {amount.toLocaleString()}원씩</HeroValue>
         </HeroRow>
         <HeroRow>
-          <HeroLabel>금리(세전)</HeroLabel>
-          <HeroValue>
-            {product ? `${product.baseRate.toFixed(1)}% ~ ${product.maxRate.toFixed(1)}%` : "—"}
-          </HeroValue>
+          <HeroLabel>가입기간</HeroLabel>
+          <HeroValue>{days}일</HeroValue>
         </HeroRow>
         <HeroRow>
-          <HeroLabel>원금</HeroLabel>
-          <HeroValue>—</HeroValue>
+          <HeroLabel>금리</HeroLabel>
+          <HeroValue>{product ? `${interestRate}%` : "—%"}</HeroValue>
         </HeroRow>
         <HeroRow>
-          <HeroLabel>이자</HeroLabel>
-          <HeroValue>—</HeroValue>
+          <HeroLabel>출금계좌</HeroLabel>
+          <HeroValue>추후 추가 예정</HeroValue>
+        </HeroRow>
+      </Hero>
+
+      <Hero>
+        <HeroRow>
+          <HeroLabel>캐릭터</HeroLabel>
+          <HeroValue>추후 추가 예정</HeroValue>
         </HeroRow>
       </Hero>
 
@@ -160,11 +169,7 @@ const Hero = styled.section`
   margin-bottom: 16px;
 `;
 
-const HeroTitle = styled.h2`
-  font-size: 16px;
-  margin: 0 0 8px;
-  color: ${({ theme }) => theme.colors.text};
-`;
+// 사용되지 않는 스타일 제거
 
 const HeroRow = styled.div`
   display: flex;
@@ -203,5 +208,6 @@ const ConfirmButton = styled.button`
   font-weight: 700;
   &:disabled { opacity: 0.5; }
 `;
+
 
 
