@@ -1,10 +1,35 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  /* 스와이프 컨테이너: 내부 콘텐츠를 잘라내기 위해 overflow hidden 적용 */
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+`;
+
+export const DeleteBackground = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #e74c3c;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 24px;
+  color: #ffffff;
+  font-weight: bold;
+`;
+
+export const SwipeContent = styled.div`
+  /* 카드 비주얼을 이 레이어에 부여하여 기본 상태에서 삭제 배경이 보이지 않도록 처리 */
+  position: relative;
+  z-index: 1;
+  width: 100%;
   background-color: #ffffff;
   border-radius: 8px;
   padding: 15px;
-  margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
