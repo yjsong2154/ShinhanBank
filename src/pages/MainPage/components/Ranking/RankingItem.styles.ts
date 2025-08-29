@@ -19,11 +19,19 @@ export const Rank = styled.span`
   color: ${({ theme }) => theme.colors.textChallenge};
 `;
 
-export const ProfileImage = styled.img`
+// 대학 로고
+export const LogoWrapper = styled.div`
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 `;
 
 export const Name = styled.span`
