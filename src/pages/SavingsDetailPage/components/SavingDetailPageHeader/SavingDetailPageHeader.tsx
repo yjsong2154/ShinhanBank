@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate 훅 import
+import { useNavigate, useParams } from "react-router-dom"; // useNavigate 훅 import
 import * as S from "./SavingDetailPageHeader.styles";
 import menu from "../../../../assets/icons/menu-dots.svg";
 import BackButton from "../../../../components/BackButton/BackButton";
@@ -11,9 +11,12 @@ interface DetailPageHeaderProps {
 
 const DetailPageHeader: React.FC<DetailPageHeaderProps> = ({ title, showMenu }) => {
   const navigate = useNavigate(); // useNavigate 훅 사용
+  const { id } = useParams<{ id: string }>();
 
   const handleMenuClick = () => {
-    navigate("/save-settings"); // 적금통 설정 페이지 경로로 이동
+    if (id) {
+      navigate(`/save-settings/${id}`); // 가져온 id를 사용하여 동적 경로로 이동
+    }
   };
 
   return (

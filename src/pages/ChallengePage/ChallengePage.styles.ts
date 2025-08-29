@@ -18,6 +18,15 @@ export const Title = styled.h1`
   font-weight: bold;
 `;
 
-export const ChallengeList = styled.div`
+export const StatsContainer = styled.div`
+  margin-bottom: 20px;
   padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+`;
+
+export const AchievementList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;

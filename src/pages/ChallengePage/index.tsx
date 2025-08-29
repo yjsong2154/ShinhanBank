@@ -1,27 +1,47 @@
-import TabComponent from '../../components/Tab/TabComponent';
-import ChallengeItem from './components/ChallengeItem/ChallengeItem';
-import { challengePageData } from '../../api/mockData';
+import { useEffect, useState } from 'react';
+import useAchievements from '../../hooks/useAchievements';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import * as S from './ChallengePage.styles';
+import AchievementItem from './components/AchievementItem/AchievementItem';
 
 const ChallengePage = () => {
-  const inProgressList = challengePageData.inProgress.map((item) => (
-    <ChallengeItem key={item.id} {...item} />
-  ));
-  const completedList = challengePageData.completed.map((item) => (
-    <ChallengeItem key={item.id} {...item} />
-  ));
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const tabs = [
-    { name: `진행중 (${inProgressList.length})`, component: inProgressList },
-    { name: `완료 (${completedList.length})`, component: completedList },
-  ];
+  useEffect(() => {
+    const storedUserId = sessionStorage.getItem('user_id');
+    setUserId(storedUserId);
+  }, []);
+
+  const { data: achievementsData, loading, error } = useAchievements(userId);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
+  if (!achievementsData) {
+    return <div>업적 데이터를 불러올 수 없습니다.</div>;
+  }
+
+  const { user, stats, achievements } = achievementsData;
 
   return (
     <S.Container>
       <S.Header>
-        <S.Title>챌린지</S.Title>
+        <S.Title>나의 업적</S.Title>
       </S.Header>
-      <TabComponent tabs={tabs} />
+      <S.StatsContainer>
+        <p>{user.nickname}님의 달성률: {stats.completion_rate}%</p>
+        <p>({stats.completed_achievements} / {stats.total_achievements})</p>
+      </S.StatsContainer>
+      <S.AchievementList>
+        {achievements.map((achievement) => (
+          <AchievementItem key={achievement.achievement_id} achievement={achievement} />
+        ))}
+      </S.AchievementList>
     </S.Container>
   );
 };

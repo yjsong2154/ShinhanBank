@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import useRanking from '../../../../hooks/useRanking';
 import TabComponent from "../../../../components/Tab/TabComponent";
 import RankingStage from "./RankingStage";
 import RankingItem from "./RankingItem";
@@ -37,6 +39,14 @@ const renderRankingCard = (list: Row[]) => {
 };
 
 const RankingSection = () => {
+  const { data, loading, error } = useRanking('university');
+
+  useEffect(() => {
+    console.log('Ranking Data:', data);
+    console.log('Loading:', loading);
+    console.log('Error:', error);
+  }, [data, loading, error]);
+
   const tabs = [
     { name: "학과 랭킹", component: renderRankingCard(rankingData.department) },
     {

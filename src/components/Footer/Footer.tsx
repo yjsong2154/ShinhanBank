@@ -16,7 +16,7 @@ const Footer = () => {
       </S.FooterItem>
       <S.FooterItem onClick={() => handleNavigation('/challenge')}>
         <S.Icon src="/icons/challenge.svg" alt="챌린지" />
-        <S.Label>챌린지</S.Label>
+        <S.Label>업적</S.Label>
       </S.FooterItem>
       <S.FooterItem onClick={() => handleNavigation('/mypage')}>
         <S.Icon src="/icons/mypage.svg" alt="마이" />

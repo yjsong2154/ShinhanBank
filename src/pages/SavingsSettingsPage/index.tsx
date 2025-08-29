@@ -1,14 +1,24 @@
-import React, { useState } from "react";
-import { savingsDetail } from "../../api/mockDataSaving";
+import React, { useState, useEffect } from "react";
+// import { useParams } from "react-router-dom";
+import useSavingsDetail from "../../hooks/useSavingsDetail";
 import * as S from "./SavingsSettingsPage.styles";
 import BackButton from "../../components/BackButton/BackButton";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const SavingsSettingsPage = () => {
-  const [title, setTitle] = useState(savingsDetail.title); // 이름 상태 추가
-  const [description, setDescription] = useState(savingsDetail.description);
-  const [targetAmount, setTargetAmount] = useState(
-    savingsDetail.targetAmount.toString()
-  );
+  const { data, loading, error } = useSavingsDetail();
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [targetAmount, setTargetAmount] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.bucket.name);
+      setDescription(data.bucket.description);
+      setTargetAmount(data.bucket.target_amount.toString());
+    }
+  }, [data]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -41,6 +51,18 @@ const SavingsSettingsPage = () => {
     console.log("목표 금액 변경:", targetAmount);
     alert("목표 금액이 변경되었습니다!");
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!data) {
+    return <div>데이터를 찾을 수 없습니다.</div>;
+  }
 
   return (
     <S.Container>
