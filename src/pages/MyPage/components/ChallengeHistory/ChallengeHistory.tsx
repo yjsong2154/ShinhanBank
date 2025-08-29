@@ -74,14 +74,11 @@ const ChallengeHistory = () => {
 
   const completedList = myPageData.challengeHistory.completed.map((item) => (
     <S.ChallengeItem key={item.id}>
-      <S.ChallengeInfo>
+      <S.ChallengeHeader>
         <S.Title>{item.title}</S.Title>
-        <S.SubText>{item.content}</S.SubText>
-      </S.ChallengeInfo>
-      <S.RightInfo>
         <S.Period>완료</S.Period>
-        <S.Reward>{item.reward}</S.Reward>
-      </S.RightInfo>
+      </S.ChallengeHeader>
+      <S.SubText>{item.content}</S.SubText>
     </S.ChallengeItem>
   ));
 
