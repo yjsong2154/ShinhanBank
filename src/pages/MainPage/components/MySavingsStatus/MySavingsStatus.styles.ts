@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import { Link } from "react-router-dom";
 
 export const Container = styled.section`
@@ -143,11 +143,46 @@ export const Progress = styled.div`
   margin: 40px 5px 15px;
 `;
 
-export const ProgressBar = styled.div`
+const fill = (to: number) => keyframes`
+  from { width: 0%; }
+  to   { width: ${to}%; }
+`;
+
+export const ProgressBar = styled.div<{ $percent: number }>`
   height: 100%;
   border-radius: 999px;
   background: #9a77ff;
-  transition: width 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  animation: ${({ $percent }) => css`
+    ${fill($percent)} 900ms ease-out forwards
+  `};
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    width: ${({ $percent }) => `${$percent}%`};
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shine 2.3s ease-out 0.15s forwards;
+  }
+
+  @keyframes shine {
+    to {
+      transform: translateX(100%);
+    }
+  }
 `;
 
 export const ProgressText = styled.span`
