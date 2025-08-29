@@ -76,8 +76,8 @@ export const Ring = styled.div<{ $percent: number }>`
 `;
 
 export const CharacterWrapper = styled.div`
-  width: calc(var(--size) - 22px);
-  height: calc(var(--size) - 22px);
+  width: calc(var(--size) - var(--thickness) * 2);
+  height: calc(var(--size) - var(--thickness) * 2);
   border-radius: 50%;
   background: #ffffff;
   border: 1px solid #e6e2ff;
@@ -87,8 +87,8 @@ export const CharacterWrapper = styled.div`
 
   img,
   svg {
-    width: 72%;
-    height: 72%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
   }
 `;

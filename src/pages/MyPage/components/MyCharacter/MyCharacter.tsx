@@ -1,12 +1,43 @@
-import { myPageData } from "../../../../api/mockData";
-import Character from "../../../../components/Character/Character";
+import useUserInfo from "../../../../hooks/useUserInfo";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
+import AvatarSOL from "../../../../components/AvatarSOL/AvatarSOL";
 import * as S from "./MyCharacter.styles";
 
-const MyCharacter = () => {
-  const { name, level, points, nextLevelPoints } = myPageData.character;
+type Char = 1 | 2 | 3;
 
-  const totalForNext = Math.max(1, points + nextLevelPoints);
-  const percent = Math.round((points / totalForNext) * 100);
+function toChar(n: number): Char {
+  if (n === 1 || n === 2 || n === 3) return n;
+  return 1;
+}
+
+type Out = 0 | 1 | 2 | 3;
+
+function toOUt(n: number): Out {
+  if (n === 0 ||n === 1 || n === 2 || n === 3) return n;
+  return 0;
+}
+
+const MyCharacter = () => {
+  const userId = sessionStorage.getItem("user_id");
+  const { data: user, loading, error } = useUserInfo(userId || "");
+
+  if (loading)
+    return (
+      <S.Container>
+        <LoadingSpinner />
+      </S.Container>
+    );
+  if (error) return <S.Container>Error: {error}</S.Container>;
+  if (!user)
+    return <S.Container>사용자 정보를 불러올 수 없습니다.</S.Container>;
+
+  console.log("User Data in MyCharacter:", user.point);
+
+  const point = user.point;
+  const level = Math.floor(point / 1000);          // 1000으로 나눈 몫
+  const remainder = point % 1000;                 // 1000으로 나눈 나머지
+  const nextLevelPoints = 1000 - remainder;       // 다음 레벨까지 남은 포인트
+  const percent = (remainder / 1000) * 100;   
 
   return (
     <S.Container>
@@ -14,16 +45,16 @@ const MyCharacter = () => {
 
       <S.Ring $percent={Math.min(100, Math.max(0, percent))}>
         <S.CharacterWrapper>
-          <Character id="0" />
+          <AvatarSOL size={250} character={toChar(user.character.character_item.id)} cloth={toOUt(user.character.outfit_item.id)} hat={toOUt(user.character.hat_item.id)} />
         </S.CharacterWrapper>
       </S.Ring>
 
       <S.CharacterInfo>
-        <S.CharacterName>{name}</S.CharacterName>
+        <S.CharacterName>{user.character.character_item.name}</S.CharacterName>
         <S.LevelBadge>Lv.{level}</S.LevelBadge>
 
         <S.PointInfo>
-          <S.Point>{points}P</S.Point>
+          <S.Point>{user.point}P</S.Point>
           <S.NextLevel>다음 레벨까지 {nextLevelPoints}P 남았어요</S.NextLevel>
         </S.PointInfo>
       </S.CharacterInfo>

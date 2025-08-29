@@ -1,31 +1,31 @@
 import * as S from './Character.styles';
-import useCharacter from '../../hooks/useCharacter';
-import CharacterCall from './CharacterCall';
+import AvatarSOL from '../AvatarSOL/AvatarSOL';
 
 interface CharacterId {
-  id: string;
+  character: number;
+  cloth: number;
+  hat: number;
 }
 
-const Character: React.FC<CharacterId> = ({ id }) => {
-  const { data: characterData, loading: characterLoading, error: characterError } = useCharacter(id);
+type Char = 1 | 2 | 3;
 
-  if (characterLoading) {
-    return <S.FreeContainer>캐릭터 정보를 불러오는 중...</S.FreeContainer>;
-  }
+function toChar(n: number): Char {
+  if (n === 1 || n === 2 || n === 3) return n;
+  return 1;
+}
 
-  if (characterError || !characterData) {
-    return <S.FreeContainer>캐릭터 정보를 불러오지 못했습니다.</S.FreeContainer>;
-  }
+type Out = 0 | 1 | 2 | 3;
 
+function toOUt(n: number): Out {
+  if (n === 0 ||n === 1 || n === 2 || n === 3) return n;
+  return 0;
+}
+
+const Character: React.FC<CharacterId> = ({ character = 0, cloth = 0, hat = 0 }) => {
   return (
-    <S.FreeContainer>
-      <CharacterCall
-        characterUrl={characterData.characterUrl}
-        backgroundUrl={characterData.backgroundUrl}
-        clothesUrl={characterData.clothesUrl}
-        accessoryUrl={characterData.accessoryUrl}
-      />
-    </S.FreeContainer>
+    <S.CharacterWrapper>
+      <AvatarSOL size={250} character={toChar(character)} cloth={toOUt(cloth)} hat={toOUt(hat)} />
+    </S.CharacterWrapper>
   );
 };
 

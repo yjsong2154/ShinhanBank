@@ -26,6 +26,7 @@ export interface User {
   created_at: string;
   university: University;
   character: Character;
+  point: number;
 }
 
 interface UserApiResponse {
@@ -64,7 +65,7 @@ const fetchUserInfo = async (): Promise<User> => {
  * @returns 사용자 정보
  */
 export const fetchUserById = async (id: string): Promise<User> => {
-  const response = await fetch(`${API_PURL}/users/${id}`, {
+  const response = await fetch(`${API_URL}/users/${id}`, {
     credentials: 'include',
   });
 
