@@ -19,7 +19,7 @@ export const Container = styled.div<{ $striped?: boolean; $isMe?: boolean }>`
     $isMe &&
     css`
       background: #e9efff; /* 눈에 띄는 다른 배경색 */
-      border: 1.5px solid ${theme.colors.main};
+      border: 1.5px solid ${theme.colors.primary}; /* 테두리 강조 */
       border-radius: 8px;
       font-weight: 600; /* 폰트 강조 */
     `}
@@ -34,7 +34,7 @@ export const Rank = styled.span`
   font-size: 1.1rem;
   font-weight: 800;
   text-align: center;
-  color: ${({ theme }) => theme.colors.textPoint};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const LogoWrapper = styled.div`
@@ -43,7 +43,6 @@ export const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   overflow: hidden;
   background: #fff;
   border: 1px solid #eee;
@@ -59,7 +58,7 @@ export const Name = styled.span`
   flex: 1;
   font-weight: 500;
   font-size: 1rem;
-  color: ${({ theme }) => theme.colors.textBody};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 // 2. 점수와 왕관 아이콘을 정렬하기 위해 flex 속성 추가
@@ -69,7 +68,7 @@ export const Amount = styled.span`
   gap: 6px;
   margin-left: auto;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.textBody};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const CrownIcon = styled.img`

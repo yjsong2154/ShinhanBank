@@ -1,7 +1,7 @@
 // RankingStage.tsx
 import React from "react";
-import Character from "../../../../components/Character/Character";
 import * as S from "./RankingStage.styles";
+import DeptOrUnivIcon from "./DeptOrUnivIcon";
 
 export interface RankingRow {
   rank: number;
@@ -28,7 +28,7 @@ const RankingStage: React.FC<Props> = ({ top3 }) => {
       {podium.map(({ rank, name, crown }) => (
         <S.Item key={rank} first={rank === 1}>
           <S.Avatar first={rank === 1}>
-            <Character id="0" />
+            <DeptOrUnivIcon name={name} size={40} />
             <S.Badge>{rank}</S.Badge>
 
             {/* ✅ 왕관 표시 */}
