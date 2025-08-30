@@ -24,11 +24,11 @@
 
 1.  프로젝트 루트 디렉토리에서 다음 명령어를 실행하여 의존성을 설치합니다.
     ```bash
-    pnpm install
+    npm install
     ```
 2.  다음 명령어를 실행하여 프로젝트를 빌드합니다.
     ```bash
-    pnpm build
+    npm build
     ```
 3.  빌드 결과물은 `dist` 디렉토리에 생성됩니다.
 
@@ -38,11 +38,11 @@
 
 1.  프로젝트 루트 디렉토리에서 다음 명령어를 실행하여 의존성을 설치합니다.
     ```bash
-    pnpm install
+    npm install
     ```
 2.  다음 명령어를 실행하여 개발 서버를 구동합니다.
     ```bash
-    pnpm dev
+    npm run dev
     ```
 3.  브라우저에서 `http://localhost:5173` (또는 터미널에 표시된 주소)로 접속합니다.
 
