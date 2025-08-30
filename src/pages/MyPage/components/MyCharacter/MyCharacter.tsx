@@ -1,26 +1,12 @@
+/**
+ * 마이페이지에서 사용자 캐릭터를 렌더링합니다. 공통 `Character` 컴포넌트를 사용합니다.
+ */
 import useUserInfo from "../../../../hooks/useUserInfo";
 import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
-import AvatarSOL from "../../../../components/AvatarSOL/AvatarSOL";
+import Character from "../../../../components/Character/Character";
 import * as S from "./MyCharacter.styles";
 
-type Char = 1 | 2 | 3 | 10 ;
-type Cloth = 0| 6 | 5 | 4 | 11 ;
-type Item = 0 | 7 | 8 | 9 | 12 ;
-
-function toChar(n: number): Char {
-  if (n === 1 || n === 2 || n === 3 || n === 10) return n;
-  return 1;
-}
-
-function toCloth(n: number): Cloth {
-  if (n === 0 || n === 6 || n === 5 || n === 4 || n === 11) return n;
-  return 0;
-}
-
-function toItem(n: number): Item {
-  if (n === 0 || n === 7 || n === 8 || n === 9 || n === 12) return n;
-  return 0;
-}
+// 캐릭터 렌더링은 MySavingsList와 동일한 방식(숫자 변환)으로 처리
 
 const MyCharacter = () => {
   const userId = sessionStorage.getItem("user_id");
@@ -50,7 +36,11 @@ const MyCharacter = () => {
 
       <S.Ring $percent={Math.min(100, Math.max(0, percent))}>
         <S.CharacterWrapper>
-          <AvatarSOL size={250} character={toChar(user.character.character_item.id)} cloth={toCloth(user.character.outfit_item.id)} hat={toItem(user.character.hat_item.id)} />
+          <Character
+            character={parseInt(String(user.character.character_item.id))}
+            cloth={parseInt(String(user.character.outfit_item.id))}
+            hat={parseInt(String(user.character.hat_item.id))}
+          />
         </S.CharacterWrapper>
       </S.Ring>
 
