@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 /**
  * 알림 아이템 스와이프 UI 스타일 정의
@@ -9,7 +9,7 @@ export const Container = styled.div`
   position: relative;
   overflow: hidden;
   margin-bottom: 10px;
-  border-radius: 8px;
+  border-radius: 20px;
 `;
 
 export const DeleteAction = styled.button`
@@ -51,15 +51,16 @@ export const TitleWrapper = styled.div`
 export const Title = styled.h3`
   font-size: 16px;
   font-weight: bold;
-  margin: 0;
+  color: #473350;
+  margin: 5px;
 `;
 
 export const Type = styled.span`
   font-size: 12px;
-  color: ${({ theme }) => theme.colors.lightGray};
-  background-color: ${({ theme }) => theme.colors.secondary};
-  padding: 2px 6px;
-  border-radius: 4px;
+  background-color: #9a77ff;
+  color: #fff;
+  padding: 4px 7px;
+  border-radius: 25px;
 `;
 
 export const Content = styled.p`

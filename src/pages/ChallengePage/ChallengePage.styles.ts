@@ -1,7 +1,7 @@
 import styled, { keyframes, css } from "styled-components";
 
 export const Container = styled.div`
-  padding: 20px 10px;
+  padding: 20px 20px;
   max-width: 500px;
   margin: 0 auto;
 `;
@@ -10,6 +10,7 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 10px;
   margin-bottom: 20px;
 `;
 
@@ -21,7 +22,8 @@ export const Title = styled.h1`
 export const StatsContainer = styled.div`
   margin-bottom: 30px;
   padding: 20px 16px;
-  background-color: #f5f5f7;
+  //background-color: #7c70e8;
+  background-color: #262141;
   border-radius: 15px;
 `;
 
@@ -35,12 +37,12 @@ export const StatsHeader = styled.div`
 export const StatsTitle = styled.div`
   font-size: 16px;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
+  color: #fff;
 `;
 
 export const StatsSub = styled.div`
   font-size: 13px;
-  color: #555;
+  color: #fafafa;
 `;
 
 export const ProgressBar = styled.div`
@@ -116,7 +118,7 @@ export const PercentLabel = styled.span`
   transform: translateY(-50%);
   font-size: 12px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: #262141;
 `;
 
 export const AchievementList = styled.div`
