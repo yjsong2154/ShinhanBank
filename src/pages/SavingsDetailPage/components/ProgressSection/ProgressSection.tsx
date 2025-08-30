@@ -5,16 +5,19 @@ import Character from '../../../../components/Character/Character';
 interface ProgressSectionProps {
   currentAmount: number;
   targetAmount: number;
+  character: number;
+  cloth: number;
+  hat: number;
 }
 
-const ProgressSection: React.FC<ProgressSectionProps> = ({ currentAmount, targetAmount }) => {
+const ProgressSection: React.FC<ProgressSectionProps> = ({ currentAmount, targetAmount, character, cloth, hat}) => {
   const remainingAmount = targetAmount - currentAmount;
 
   return (
     <S.Container>
       <S.Title>저축 진행률</S.Title>
       <S.ProgressGraphic>
-        <Character id='0' />
+        <Character character={character} cloth={cloth} hat={hat} />
       </S.ProgressGraphic>
       <S.AmountInfo>
         <S.CurrentAmount>{currentAmount.toLocaleString()}원</S.CurrentAmount>

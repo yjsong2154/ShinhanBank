@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { PARTS_MAP, HATS_MAP, CLOTHS_MAP } from './partsLoader';
 import styles from './AvatarSOL.module.css';
 
-type Char = 1 | 2 | 3;
-type Item = 1 | 2 | 3;
+type Char = 1 | 2 | 3 | 10 ;
+type Cloth = 6 | 5 | 4 | 11 ;
+type Item = 7 | 8 | 9 | 12 ;
 
 type State = 'idle' | 'wave';
 
 interface Props {
   size?: number;
   character?: Char;      // ✅ 0 제거
-  cloth?: 0 | Item;      // 0 허용(없음)
+  cloth?: 0 | Cloth;      // 0 허용(없음)
   hat?: 0 | Item;        // 0 허용(없음)
 }
 

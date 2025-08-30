@@ -15,7 +15,7 @@ const ChallengePage = () => {
   const { data: achievementsData, loading, error } = useAchievements(userId);
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <div>{error.message}</div>;
+  if (error) return <div>{error}</div>;
   if (!achievementsData) return <div>업적 데이터를 불러올 수 없습니다.</div>;
 
   const { user, stats, achievements } = achievementsData;

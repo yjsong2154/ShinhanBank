@@ -34,7 +34,7 @@ const SavingsDetailPage = () => {
 
   const { bucket } = data;
   const currentAmount = (bucket.current_progress / 100) * bucket.target_amount;
-  // console.log("data:", data);
+  console.log("bucket:", bucket);
 
   const userId = sessionStorage.getItem('user_id');
   const isOwner = userId === String(bucket.owner.id);
@@ -74,6 +74,9 @@ const SavingsDetailPage = () => {
       <ProgressSection
         currentAmount={currentAmount}
         targetAmount={bucket.target_amount}
+        character={bucket.owner.character.character_item.id}
+        cloth={bucket.owner.character.outfit_item.id}
+        hat={bucket.owner.character.hat_item.id}
       />
 
       <S.CommentSection>

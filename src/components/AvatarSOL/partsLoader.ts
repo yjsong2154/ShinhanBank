@@ -79,38 +79,56 @@ import RArm3_3 from './parts03/cloths/uni_r_arm.svg?react';
 
 export const CLOTHS_MAP = {
   1: {
-    1: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 },
-    2: { Body: Body1_2, LArm: LArm1_2, RArm: RArm1_2 },
-    3: { Body: Body1_3, LArm: LArm1_3, RArm: RArm1_3 },
+    6: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 },
+    5: { Body: Body1_2, LArm: LArm1_2, RArm: RArm1_2 },
+    4: { Body: Body1_3, LArm: LArm1_3, RArm: RArm1_3 },
+    11: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 }, //11 미구현 아이템
   },
   2: {
-    1: { Body: Body2_1, LArm: LArm2_1, RArm: RArm2_1 },
-    2: { Body: Body2_2, LArm: LArm2_2, RArm: RArm2_2 },
-    3: { Body: Body2_3, LArm: LArm2_3, RArm: RArm2_3 },
+    6: { Body: Body2_1, LArm: LArm2_1, RArm: RArm2_1 },
+    5: { Body: Body2_2, LArm: LArm2_2, RArm: RArm2_2 },
+    4: { Body: Body2_3, LArm: LArm2_3, RArm: RArm2_3 },
+    11: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 },
   },
   3: {
-    1: { Body: Body3_1, LArm: LArm3_1, RArm: RArm3_1 },
-    2: { Body: Body3_2, LArm: LArm3_2, RArm: RArm3_2 },
-    3: { Body: Body3_3, LArm: LArm3_3, RArm: RArm3_3 },
+    6: { Body: Body3_1, LArm: LArm3_1, RArm: RArm3_1 },
+    5: { Body: Body3_2, LArm: LArm3_2, RArm: RArm3_2 },
+    4: { Body: Body3_3, LArm: LArm3_3, RArm: RArm3_3 },
+    11: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 },
+  },
+  10: { //현재 구현 없음
+    6: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 },
+    5: { Body: Body1_2, LArm: LArm1_2, RArm: RArm1_2 },
+    4: { Body: Body1_3, LArm: LArm1_3, RArm: RArm1_3 },
+    11: { Body: Body1_1, LArm: LArm1_1, RArm: RArm1_1 },
   },
 };
 
 export const HATS_MAP = {
   1:{
-    1: Hat1_1,
-    2: Hat1_2,
-    3: Hat1_3,
+    8: Hat1_1,
+    9: Hat1_2,
+    7: Hat1_3,
+    12: Hat1_1,
   },
   2:{
-    1: Hat2_1,
-    2: Hat2_2,
-    3: Hat2_3,
+    8: Hat2_1,
+    9: Hat2_2,
+    7: Hat2_3,
+    12: Hat1_1,
   },
   3:{
-    1: Hat3_1,
-    2: Hat3_2,
-    3: Hat3_3,
-  }
+    8: Hat3_1,
+    9: Hat3_2,
+    7: Hat3_3,
+    12: Hat1_1,
+  },
+  10:{ // 현재 구현 없음
+    8: Hat1_1,
+    9: Hat1_2,
+    7: Hat1_3,
+    12: Hat1_1,
+  },
 };
 
 
@@ -147,5 +165,16 @@ export const PARTS_MAP = {
     LLeg: LLeg3,
     RLeg: RLeg3,
     Chick: Chick3,
+  },
+  10 : { // 현재 구현 없음
+    Head: Head1,
+    Eye: Eye1,
+    Mouth: Mouth1,
+    Body: Body1,
+    LArm: LArm1,
+    RArm: RArm1,
+    LLeg: LLeg1,
+    RLeg: RLeg1,
+    Chick: Chick1,
   },
 };

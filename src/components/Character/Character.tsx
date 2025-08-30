@@ -7,24 +7,29 @@ interface CharacterId {
   hat: number;
 }
 
-type Char = 1 | 2 | 3;
+type Char = 1 | 2 | 3 | 10 ;
+type Cloth = 0| 6 | 5 | 4 | 11 ;
+type Item = 0 | 7 | 8 | 9 | 12 ;
 
 function toChar(n: number): Char {
-  if (n === 1 || n === 2 || n === 3) return n;
+  if (n === 1 || n === 2 || n === 3 || n === 10) return n;
   return 1;
 }
 
-type Out = 0 | 1 | 2 | 3;
+function toCloth(n: number): Cloth {
+  if (n === 0 || n === 6 || n === 5 || n === 4 || n === 11) return n;
+  return 0;
+}
 
-function toOUt(n: number): Out {
-  if (n === 0 ||n === 1 || n === 2 || n === 3) return n;
+function toItem(n: number): Item {
+  if (n === 0 || n === 7 || n === 8 || n === 9 || n === 12) return n;
   return 0;
 }
 
 const Character: React.FC<CharacterId> = ({ character = 0, cloth = 0, hat = 0 }) => {
   return (
     <S.CharacterWrapper>
-      <AvatarSOL size={250} character={toChar(character)} cloth={toOUt(cloth)} hat={toOUt(hat)} />
+      <AvatarSOL size={250} character={toChar(character)} cloth={toCloth(cloth)} hat={toItem(hat)} />
     </S.CharacterWrapper>
   );
 };

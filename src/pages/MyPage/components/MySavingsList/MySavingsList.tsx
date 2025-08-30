@@ -14,6 +14,8 @@ const MySavingsList = () => {
   const { data: savings, loading, error } = useSavings();
   const navigate = useNavigate();
 
+  console.log("Savings data:", savings);
+
   const handleCreateSavings = () => navigate("/buckets/fixed");
 
   if (loading) return <LoadingSpinner />;
@@ -56,7 +58,7 @@ const MySavingsList = () => {
                 <S.Header>
                   <S.LeftMeta>
                     <S.Avatar>
-                      <Character id="0" />
+                      <Character character={parseInt(item.character.character_item.id)} cloth={parseInt(item.character.outfit_item.id)} hat={parseInt(item.character.hat_item.id)} />
                     </S.Avatar>
                     <div>
                       <S.Name>{item.name}</S.Name>

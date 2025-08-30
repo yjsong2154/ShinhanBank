@@ -54,8 +54,8 @@ export const Avatar = styled.div`
 
   img,
   svg {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
   }
 `;
 

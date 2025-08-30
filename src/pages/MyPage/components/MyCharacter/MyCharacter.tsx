@@ -3,17 +3,22 @@ import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner
 import AvatarSOL from "../../../../components/AvatarSOL/AvatarSOL";
 import * as S from "./MyCharacter.styles";
 
-type Char = 1 | 2 | 3;
+type Char = 1 | 2 | 3 | 10 ;
+type Cloth = 0| 6 | 5 | 4 | 11 ;
+type Item = 0 | 7 | 8 | 9 | 12 ;
 
 function toChar(n: number): Char {
-  if (n === 1 || n === 2 || n === 3) return n;
+  if (n === 1 || n === 2 || n === 3 || n === 10) return n;
   return 1;
 }
 
-type Out = 0 | 1 | 2 | 3;
+function toCloth(n: number): Cloth {
+  if (n === 0 || n === 6 || n === 5 || n === 4 || n === 11) return n;
+  return 0;
+}
 
-function toOUt(n: number): Out {
-  if (n === 0 ||n === 1 || n === 2 || n === 3) return n;
+function toItem(n: number): Item {
+  if (n === 0 || n === 7 || n === 8 || n === 9 || n === 12) return n;
   return 0;
 }
 
@@ -45,7 +50,7 @@ const MyCharacter = () => {
 
       <S.Ring $percent={Math.min(100, Math.max(0, percent))}>
         <S.CharacterWrapper>
-          <AvatarSOL size={250} character={toChar(user.character.character_item.id)} cloth={toOUt(user.character.outfit_item.id)} hat={toOUt(user.character.hat_item.id)} />
+          <AvatarSOL size={250} character={toChar(user.character.character_item.id)} cloth={toCloth(user.character.outfit_item.id)} hat={toItem(user.character.hat_item.id)} />
         </S.CharacterWrapper>
       </S.Ring>
 

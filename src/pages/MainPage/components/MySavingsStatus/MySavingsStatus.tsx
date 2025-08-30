@@ -29,7 +29,11 @@ const MySavingsStatus = () => {
               <S.CardLink to={`/savings/${item.id}`} key={item.id}>
                 <S.Card>
                   <S.CharacterBubble>
-                    <Character id={item.character.character_item.id} />
+                    <Character 
+                    character={parseInt(item.character.character_item.id)}
+                    cloth={parseInt(item.character.outfit_item.id)}
+                    hat={parseInt(item.character.hat_item.id)}
+                    />
                   </S.CharacterBubble>
 
                   <S.CardBody>

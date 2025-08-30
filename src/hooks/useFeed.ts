@@ -41,7 +41,9 @@ export interface Feed {
   current: number;
   likes: number;
   comments: number;
-  characterId: string;
+  characterId: number;
+  clothId: number;
+  hatId: number;
 }
 
 const fetchFeed = async (category: string): Promise<Feed[]> => {
@@ -69,7 +71,9 @@ const fetchFeed = async (category: string): Promise<Feed[]> => {
     current: (bucket.current_progress / 100) * bucket.target_amount,
     likes: bucket.like_count,
     comments: bucket.comment_count,
-    characterId: bucket.owner.character.character_item.id,
+    characterId: parseInt(bucket.owner.character.character_item.id),
+    clothId: parseInt(bucket.owner.character.outfit_item.id),
+    hatId: parseInt(bucket.owner.character.hat_item.id),
   }));
 };
 

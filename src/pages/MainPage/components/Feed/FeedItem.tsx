@@ -12,6 +12,8 @@ interface FeedItemProps {
   likes: number;
   comments: number;
   characterId: number;
+  clothId: number;
+  hatId: number;
 }
 
 const FeedItem: React.FC<FeedItemProps> = ({
@@ -24,6 +26,8 @@ const FeedItem: React.FC<FeedItemProps> = ({
   likes,
   comments,
   characterId,
+  clothId,
+  hatId,
 }) => {
   const progressPercentage =
     target > 0 ? Math.round((current / target) * 100) : 0;
@@ -33,7 +37,7 @@ const FeedItem: React.FC<FeedItemProps> = ({
       <S.LeftSection>
         <S.ProgressCircle progress={progressPercentage}>
           <S.CharacterWrapper>
-            <Character id={characterId} />
+            <Character character={characterId} cloth={clothId} hat={hatId}/>
           </S.CharacterWrapper>
         </S.ProgressCircle>
         <S.GoalText>
