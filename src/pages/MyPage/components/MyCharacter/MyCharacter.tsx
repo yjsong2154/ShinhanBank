@@ -5,12 +5,33 @@ import useUserInfo from "../../../../hooks/useUserInfo";
 import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 import Character from "../../../../components/Character/Character";
 import * as S from "./MyCharacter.styles";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // 캐릭터 렌더링은 MySavingsList와 동일한 방식(숫자 변환)으로 처리
 
 const MyCharacter = () => {
   const userId = sessionStorage.getItem("user_id");
   const { data: user, loading, error } = useUserInfo(userId || "");
+  const [showBubble, setShowBubble] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+
+  // 말풍선 외부 클릭 시 닫기 처리
+  useEffect(() => {
+    if (!showBubble) return;
+    const handleClickOutside = (e: Event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setShowBubble(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [showBubble]);
 
   if (loading)
     return (
@@ -35,14 +56,21 @@ const MyCharacter = () => {
       <S.Title>나의 저축 캐릭터</S.Title>
 
       <S.Ring $percent={Math.min(100, Math.max(0, percent))}>
-        <S.CharacterWrapper>
+        <S.CharacterWrapper
+          ref={wrapperRef}
+          onClick={() => setShowBubble((prev) => !prev)}
+        >
           <Character
             character={parseInt(String(user.character.character_item.id))}
             cloth={parseInt(String(user.character.outfit_item.id))}
             hat={parseInt(String(user.character.hat_item.id))}
           />
+          {showBubble && (
+            <S.SpeechBubble onClick={(e) => { e.stopPropagation(); navigate("/inventory"); }}>캐릭터 꾸미기</S.SpeechBubble>
+          )}
         </S.CharacterWrapper>
       </S.Ring>
+  
 
       <S.CharacterInfo>
         <S.CharacterName>{user.character.character_item.name}</S.CharacterName>
