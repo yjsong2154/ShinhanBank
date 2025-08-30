@@ -1,21 +1,25 @@
 /**
  * 인벤토리 페이지: 캐릭터와 의상을 선택/꾸미기 위한 화면
  */
-import { useState } from "react";
-import useUserInfo from "../../hooks/useUserInfo";
-import useInventory from "../../hooks/useInventory";
-import type { InventoryItem } from "../../hooks/useInventory";
-import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import Character from "../../components/Character/Character";
-import BackButton from "../../components/BackButton/BackButton";
-import { API_URL } from "../../api/config";
+import { useState, useEffect } from "react";
+import useInventory from "../../../hooks/useInventory";
+import type { InventoryItem } from "../../../hooks/useInventory";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
+import Character from "../../../components/Character/Character";
 import * as S from "./Inventory.styles";
 
 type TabType = "character" | "outfit" | "hat";
 
-const InventoryPage = () => {
-  const userId = sessionStorage.getItem("user_id");
-  const { data: user, loading: userLoading, error: userError } = useUserInfo(userId || "");
+interface InventoryForSavingProps {
+  onSelectionChange: (selection: { character: number | null; outfit: number | null; hat: number | null }) => void;
+  initialCharacter: {
+    character_item: { id: number };
+    outfit_item: { id: number };
+    hat_item: { id: number };
+  };
+}
+
+const InventoryForSaving = ({ onSelectionChange, initialCharacter }: InventoryForSavingProps) => {
   const { data: inventory, loading: inventoryLoading, error: inventoryError } = useInventory();
   const [activeTab, setActiveTab] = useState<TabType>("character");
   
@@ -23,57 +27,17 @@ const InventoryPage = () => {
   const [selectedCharacter, setSelectedCharacter] = useState<number | null>(null);
   const [selectedOutfit, setSelectedOutfit] = useState<number | null>(null);
   const [selectedHat, setSelectedHat] = useState<number | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
 
-  // 저장 기능
-  const handleSaveCharacter = async () => {
-    if (!user) return;
-
-    setIsSaving(true);
-    try {
-      const characterId = selectedCharacter !== null ? selectedCharacter : parseInt(String(user.character.character_item.id));
-      const outfitId = selectedOutfit !== null ? selectedOutfit : parseInt(String(user.character.outfit_item.id));
-      const hatId = selectedHat !== null ? selectedHat : parseInt(String(user.character.hat_item.id));
-
-      const response = await fetch(`${API_URL}/users/character`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          "character_item_id": characterId,
-          "outfit_item_id": outfitId,
-          "hat_item_id": hatId,
-        }),
-      });
-
-        if (response.ok) {
-          // 저장 성공 시 저장 완료 상태로 설정하여 버튼 비활성화
-          setIsSaved(true);
-        } else {
-        throw new Error("저장에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("Character save error:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  // 변경사항이 있는지 확인
-  const hasChanges = selectedCharacter !== null || selectedOutfit !== null || selectedHat !== null;
-
-  // 새로운 변경사항이 있을 때 저장 완료 상태 리셋
-  const resetSavedState = () => {
-    if (isSaved) {
-      setIsSaved(false);
-    }
-  };
+  useEffect(() => {
+    onSelectionChange({
+      character: selectedCharacter,
+      outfit: selectedOutfit,
+      hat: selectedHat,
+    });
+  }, [selectedCharacter, selectedOutfit, selectedHat, onSelectionChange]);
 
 
-  if (userLoading || inventoryLoading) {
+  if (inventoryLoading) {
     return (
       <S.Container>
         <LoadingSpinner />
@@ -81,47 +45,36 @@ const InventoryPage = () => {
     );
   }
 
-  if (userError || inventoryError || !user || !inventory) {
+  if (inventoryError || !inventory) {
     return (
       <S.Container>
         <S.ErrorMessage>
-          {userError || inventoryError || "데이터를 불러올 수 없습니다."}
+          {inventoryError || "데이터를 불러올 수 없습니다."}
         </S.ErrorMessage>
       </S.Container>
     );
   }
 
+  const currentCharacterId = selectedCharacter !== null ? selectedCharacter : initialCharacter.character_item.id;
+  const currentOutfitId = selectedOutfit !== null ? selectedOutfit : initialCharacter.outfit_item.id;
+  const currentHatId = selectedHat !== null ? selectedHat : initialCharacter.hat_item.id;
+
   return (
     <S.Container>
-      {/* 상단 헤더 */}
-      <S.Header>
-        <BackButton />
-        <S.Title>인벤토리</S.Title>
-      </S.Header>
-
       {/* 캐릭터 디스플레이 */}
       <S.CharacterSection>
         <S.CharacterWrapper>
           <Character
-            character={selectedCharacter !== null ? selectedCharacter : parseInt(String(user.character.character_item.id))}
-            cloth={selectedOutfit !== null ? selectedOutfit : parseInt(String(user.character.outfit_item.id))}
-            hat={selectedHat !== null ? selectedHat : parseInt(String(user.character.hat_item.id))}
+            character={currentCharacterId}
+            cloth={currentOutfitId}
+            hat={currentHatId}
           />
         </S.CharacterWrapper>
 
         <S.CharacterInfo>
         <S.CharacterName>
-          {selectedCharacter ? 
-            inventory.items_by_type.character.items.find(char => char.id === selectedCharacter)?.name || user.character.character_item.name
-            : user.character.character_item.name
-          }
+          {inventory.items_by_type.character.items.find(char => char.id === currentCharacterId)?.name || ""}
         </S.CharacterName>
-        <S.SaveButton 
-          onClick={handleSaveCharacter}
-          disabled={!hasChanges || isSaving || isSaved}
-        >
-          {isSaving ? "저장 중..." : isSaved ? "저장 완료" : "저장하기"}
-        </S.SaveButton>
         </S.CharacterInfo>
       </S.CharacterSection>
 
@@ -153,30 +106,21 @@ const InventoryPage = () => {
           <CharacterTab 
             items={inventory.items_by_type.character.items}
             selectedCharacter={selectedCharacter} 
-            onCharacterSelect={(id) => {
-              resetSavedState();
-              setSelectedCharacter(id);
-            }} 
+            onCharacterSelect={setSelectedCharacter} 
           />
         )}
         {activeTab === "outfit" && (
           <OutfitTab 
             items={inventory.items_by_type.outfit.items}
             selectedOutfit={selectedOutfit} 
-            onOutfitSelect={(id) => {
-              resetSavedState();
-              setSelectedOutfit(id);
-            }} 
+            onOutfitSelect={setSelectedOutfit} 
           />
         )}
         {activeTab === "hat" && (
           <HatTab 
             items={inventory.items_by_type.hat.items}
             selectedHat={selectedHat} 
-            onHatSelect={(id) => {
-              resetSavedState();
-              setSelectedHat(id);
-            }} 
+            onHatSelect={setSelectedHat} 
           />
         )}
       </S.InventoryGrid>
@@ -323,6 +267,4 @@ const HatTab = ({ items, selectedHat, onHatSelect }: HatTabProps) => {
   );
 };
 
-export default InventoryPage;
-
-
+export default InventoryForSaving;

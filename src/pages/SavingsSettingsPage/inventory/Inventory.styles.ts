@@ -238,5 +238,3 @@ export const AchievementMessage = styled.div`
   font-weight: 500;
   line-height: 1.4;
 `;
-
-

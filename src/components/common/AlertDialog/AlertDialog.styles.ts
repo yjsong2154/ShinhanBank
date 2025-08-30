@@ -40,6 +40,6 @@ export const Button = styled.button`
   cursor: pointer;
   font-size: 14px;
   min-width: 80px;
-  background-color: rgba(255, 0, 0, 1);
+  background-color: rgba(68, 38, 240, 1);
   color: white;
 `;

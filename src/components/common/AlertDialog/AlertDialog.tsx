@@ -17,7 +17,13 @@ const AlertDialog: React.FC<AlertDialogProps> = ({ isOpen, onClose, message }) =
       <S.Container>
         <S.Message>{message}</S.Message>
         <S.ButtonWrapper>
-          <S.Button onClick={onClose} className="confirm">확인</S.Button>
+          <S.Button 
+            onClick={() => {
+              onClose();
+              // window.location.reload();   // 새로고침
+  }         } className="confirm">
+            확인
+          </S.Button>
         </S.ButtonWrapper>
       </S.Container>
     </S.Overlay>
