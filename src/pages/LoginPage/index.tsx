@@ -27,7 +27,7 @@ const LoginPage = () => {
     try {
       const response = await fetch(`${API_URL}/users/logIn`, {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -47,11 +47,20 @@ const LoginPage = () => {
           if (first) {
             const title = first.title || "";
             const itemName = first.rewards?.[0]?.itemName || "";
-            const message = responseData.message || "축하합니다! 새로운 업적을 달성했습니다!";
-            dispatchAchievementUnlocked({ message, title, itemName, raw: responseData });
+            const message =
+              responseData.message || "축하합니다! 새로운 업적을 달성했습니다!";
+            dispatchAchievementUnlocked({
+              message,
+              title,
+              itemName,
+              raw: responseData,
+            });
           }
         }
-        navigate("/");
+        navigate("/loading", {
+          replace: true,
+          state: { nextPath: "/", delayMs: 2000 },
+        });
       } else {
         // 오류 처리
         setError(responseData.message || "로그인에 실패했습니다.");
@@ -81,19 +90,17 @@ const LoginPage = () => {
             />
           </div>
 
-          {error && <S.HelperText style={{ color: "red" }}>{error}</S.HelperText>}
+          {error && (
+            <S.HelperText style={{ color: "red" }}>{error}</S.HelperText>
+          )}
 
           <S.LoginButton type="submit">로그인</S.LoginButton>
         </S.Form>
 
-        <S.HelperText>
-          테스트용 아이디를 입력하여 로그인하세요.
-        </S.HelperText>
+        <S.HelperText>테스트용 아이디를 입력하여 로그인하세요.</S.HelperText>
       </S.Card>
     </S.Container>
   );
 };
 
 export default LoginPage;
-
-
