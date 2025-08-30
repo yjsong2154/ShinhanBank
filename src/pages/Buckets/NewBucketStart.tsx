@@ -7,7 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import { getBucketCreateList, type CreateListItem } from "../../api/getCreateList";
+import {
+  getBucketCreateList,
+  type CreateListItem,
+} from "../../api/getCreateList";
 
 // 라우트 키는 기존 경로를 유지합니다: fixed(일반적금), flexible(챌린지), td(정기예금)
 type TabKey = "fixed" | "flexible" | "td";
@@ -41,7 +44,9 @@ const NewBucketStart = () => {
   const [error, setError] = useState<string | null>(null);
 
   // 선택 상태: 상품 ID(accountTypeUniqueNo), 기간(일)
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
   const [selectedTerm, setSelectedTerm] = useState<number | null>(null);
 
   // accountDescription 내 JSON 파싱: is_challenge 여부 확인
@@ -67,7 +72,8 @@ const NewBucketStart = () => {
         setItems(data);
       } catch (e: unknown) {
         if (!mounted) return;
-        const message = e instanceof Error ? e.message : "목록 조회에 실패했습니다.";
+        const message =
+          e instanceof Error ? e.message : "목록 조회에 실패했습니다.";
         setError(message);
       } finally {
         if (mounted) setLoading(false);
@@ -129,13 +135,17 @@ const NewBucketStart = () => {
 
   const handleNext = () => {
     if (!selectedProductId) return;
-    const selectedProduct = productsForTab.find((p) => p.accountTypeUniqueNo === selectedProductId);
+    const selectedProduct = productsForTab.find(
+      (p) => p.accountTypeUniqueNo === selectedProductId
+    );
     if (!selectedProduct) return;
 
     // 다음 단계(입력 페이지)로 이동. 현재는 공통 입력 페이지를 사용.
     // productType 매핑: 적금/챌린지 -> "fixed", 예금 -> "td"
-    const productType = selectedProduct.accountTypeName === "예금" ? "td" : "fixed";
-    const periodDays = selectedTerm || Number(selectedProduct.subscriptionPeriod) || 0;
+    const productType =
+      selectedProduct.accountTypeName === "예금" ? "td" : "fixed";
+    const periodDays =
+      selectedTerm || Number(selectedProduct.subscriptionPeriod) || 0;
 
     // 이름/설명 입력 페이지로 먼저 이동
     navigate("/buckets/info", {
@@ -176,25 +186,32 @@ const NewBucketStart = () => {
       ) : error ? (
         <ErrorBox>
           <ErrorText>{error}</ErrorText>
-          <RetryButton onClick={() => {
-            setLoading(true);
-            setError(null);
-            setItems([]);
-            setSelectedProductId(null);
-            setSelectedTerm(null);
-            // 재조회
-            (async () => {
-              try {
-                const data = await getBucketCreateList();
-                setItems(data);
-              } catch (e: unknown) {
-                const message = e instanceof Error ? e.message : "목록 조회에 실패했습니다.";
-                setError(message);
-              } finally {
-                setLoading(false);
-              }
-            })();
-          }}>다시 시도</RetryButton>
+          <RetryButton
+            onClick={() => {
+              setLoading(true);
+              setError(null);
+              setItems([]);
+              setSelectedProductId(null);
+              setSelectedTerm(null);
+              // 재조회
+              (async () => {
+                try {
+                  const data = await getBucketCreateList();
+                  setItems(data);
+                } catch (e: unknown) {
+                  const message =
+                    e instanceof Error
+                      ? e.message
+                      : "목록 조회에 실패했습니다.";
+                  setError(message);
+                } finally {
+                  setLoading(false);
+                }
+              })();
+            }}
+          >
+            다시 시도
+          </RetryButton>
         </ErrorBox>
       ) : (
         <>
@@ -202,7 +219,8 @@ const NewBucketStart = () => {
 
           <Cards>
             {productsForTab.map((p) => {
-              const isSelectedProduct = selectedProductId === p.accountTypeUniqueNo;
+              const isSelectedProduct =
+                selectedProductId === p.accountTypeUniqueNo;
               const periodDays = Number(p.subscriptionPeriod) || 0;
               return (
                 <Card
@@ -227,7 +245,8 @@ const NewBucketStart = () => {
                     <MetaRow>
                       <MetaLabel>한도</MetaLabel>
                       <MetaValue>
-                        {Number(p.minSubscriptionBalance).toLocaleString()}원 ~ {Number(p.maxSubscriptionBalance).toLocaleString()}원
+                        {Number(p.minSubscriptionBalance).toLocaleString()}원 ~{" "}
+                        {Number(p.maxSubscriptionBalance).toLocaleString()}원
                       </MetaValue>
                     </MetaRow>
                     {p.rateDescription && (
@@ -261,7 +280,7 @@ const Container = styled.div`
   max-width: 500px;
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.background};
-  padding: 12px 16px 80px;
+  padding: 20px 20px 80px;
   box-sizing: border-box;
 `;
 
@@ -275,7 +294,7 @@ const TopBar = styled.header`
 const TopTitle = styled.h1`
   font-size: 18px;
   color: ${({ theme }) => theme.colors.text};
-  margin: 0;
+  margin-bottom: 10px;
 `;
 
 const Tabs = styled.div`
@@ -286,19 +305,36 @@ const Tabs = styled.div`
 `;
 
 const TabButton = styled.button<{ $active: boolean }>`
+  width: 100%;
   padding: 10px 8px;
-  border-radius: 8px;
-  border: 1px solid
-    ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.lightGray)};
-  background: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.secondary)};
-  color: ${({ $active, theme }) => ($active ? theme.colors.primary : theme.colors.text)};
+  border-radius: 14px;
+  border: 2px solid #9a77ff;
+  background: ${({ $active }) => ($active ? "#9a77ff" : "#fff")};
+  color: ${({ $active }) => ($active ? "#fff" : "#9a77ff")};
   font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.12s ease,
+    border-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #9a77ff;
+    color: #fff;
+  }
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(154, 119, 255, 0.25);
+  }
 `;
 
 const SectionTitle = styled.h3`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.text};
-  margin: 0 0 8px;
+  margin: 25px 0 8px;
 `;
 
 const Cards = styled.div`
@@ -308,11 +344,21 @@ const Cards = styled.div`
 `;
 
 const Card = styled.div<{ $selected: boolean }>`
-  border-radius: 12px;
-  border: 1px solid
-    ${({ $selected, theme }) => ($selected ? theme.colors.primary : theme.colors.secondary)};
-  background: ${({ theme }) => theme.colors.white};
+  border-radius: 20px;
+  border: 2px solid ${({ $selected }) => ($selected ? "#cdbaff" : "#ddd0ff")};
+  background: ${({ $selected }) =>
+    $selected ? "rgba(154,119,255,0.08)" : "#fff"};
   padding: 12px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .08s ease, box-shadow .2s ease;
+
+  &:hover {
+    background: ${({ $selected }) =>
+      $selected ? "rgba(154,119,255,0.12)" : "rgba(154,119,255,0.06)"};
+    border-color: ${({ $selected }) => ($selected ? "#cdbaff" : "#cdbaff")};
+  }
+
+  }
 `;
 
 const CardHeader = styled.div`
@@ -428,16 +474,34 @@ const Bottom = styled.div`
 const NextButton = styled.button`
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #9a77ff;
+  color: #fff;
   font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(154, 119, 255, 0.28),
+      0 2px 6px rgba(154, 119, 255, 0.2);
+    filter: brightness(1.03);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(154, 119, 255, 0.22);
+  }
+
   &:disabled {
-    opacity: 0.3;
-    filter: grayscale(40%);
+    background: #9a77ff;
+    color: #fff;
+    border-color: #9a77ff;
+    opacity: 0.55;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
   }
 `;
-
-

@@ -8,7 +8,10 @@ import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
 import { termsDocuments } from "../../api/mockDataTerms";
 import type { ProductType } from "../../api/mockDataSavingProducts";
-import { getBucketCreateList, type CreateListItem } from "../../api/getCreateList";
+import {
+  getBucketCreateList,
+  type CreateListItem,
+} from "../../api/getCreateList";
 
 type IncomingState = {
   productType?: ProductType;
@@ -26,14 +29,22 @@ const FixedSavingInput = () => {
   const [searchParams] = useSearchParams();
 
   // 전달 데이터 수신: location.state 우선, 없으면 URL 쿼리로 보조
-  const { productType, productId, periodDays: stateDays, termMonths, bucketName, bucketDescription, bucketPublic } =
-    (location.state as IncomingState) || {};
+  const {
+    productType,
+    productId,
+    periodDays: stateDays,
+    termMonths,
+    bucketName,
+    bucketDescription,
+    bucketPublic,
+  } = (location.state as IncomingState) || {};
 
   const qpType = searchParams.get("type") as ProductType | null;
   const qpProductId = searchParams.get("productId");
   const qpDays = searchParams.get("periodDays");
 
-  const resolvedType: ProductType | undefined = productType || qpType || undefined;
+  const resolvedType: ProductType | undefined =
+    productType || qpType || undefined;
   const resolvedProductId = productId || qpProductId || undefined;
 
   const resolvedDays = useMemo(() => {
@@ -73,7 +84,8 @@ const FixedSavingInput = () => {
 
   // 금액 포맷 헬퍼
   const formatMoney = (n: number) => (isFinite(n) ? n.toLocaleString() : "0");
-  const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
+  const clamp = (val: number, min: number, max: number) =>
+    Math.max(min, Math.min(max, val));
 
   // 스케줄 텍스트 계산: 시작일(오늘), 기간 일수, 첫/마지막 실행일
   const today = useMemo(() => new Date(), []);
@@ -91,7 +103,10 @@ const FixedSavingInput = () => {
     return `${yyyy}.${mm}.${dd}`;
   };
 
-  const endDate = useMemo(() => addDays(today, Math.max(resolvedDays, 0)), [today, resolvedDays]);
+  const endDate = useMemo(
+    () => addDays(today, Math.max(resolvedDays, 0)),
+    [today, resolvedDays]
+  );
 
   const handleNext = () => {
     const isEnabled = amount > 0 && !!resolvedProductId && resolvedDays > 0;
@@ -144,7 +159,8 @@ const FixedSavingInput = () => {
   }, [product, resolvedType, amountForHero, resolvedDays]);
 
   const afterTaxInterest = useMemo(() => {
-    if (!product || ratePercent <= 0 || resolvedDays <= 0 || principal <= 0) return 0;
+    if (!product || ratePercent <= 0 || resolvedDays <= 0 || principal <= 0)
+      return 0;
     const interest = principal * (ratePercent / 100) * (resolvedDays / 365);
     return Math.floor(interest * 0.846);
   }, [product, ratePercent, resolvedDays, principal]);
@@ -179,18 +195,20 @@ const FixedSavingInput = () => {
       </TopBar>
 
       <Hero>
-        <HeroTitle>{resolvedType === "td" ? "이렇게 맡기면" : "이렇게 모으면"}</HeroTitle>
+        <HeroTitle>
+          {resolvedType === "td" ? "이렇게 맡기면" : "이렇게 모으면"}
+        </HeroTitle>
         <HeroRow>
           <HeroLabel>이자(세후)</HeroLabel>
           <HeroValue>{formatMoney(afterTaxInterest)}원</HeroValue>
         </HeroRow>
         {resolvedType === "td" ? (
-          <HeroSub>
-            {`${formatDate(endDate)}에 받아요`}
-          </HeroSub>
+          <HeroSub>{`${formatDate(endDate)}에 받아요`}</HeroSub>
         ) : (
           <HeroSub>
-            {`${formatDate(endDate)}까지 원금 ${formatMoney(principal)}원 모아요`}
+            {`${formatDate(endDate)}까지 원금 ${formatMoney(
+              principal
+            )}원 모아요`}
           </HeroSub>
         )}
         {resolvedType !== "td" && isChallenge && challengeDesc && (
@@ -211,24 +229,30 @@ const FixedSavingInput = () => {
               step={1}
               value={clamp(amount, minPerUnit, maxPerUnit)}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setAmount(clamp(Number(e.target.value) || 0, minPerUnit, maxPerUnit))
+                setAmount(
+                  clamp(Number(e.target.value) || 0, minPerUnit, maxPerUnit)
+                )
               }
               aria-label="금액 슬라이더"
             />
             <RangeMeta>
               <span>{formatMoney(minPerUnit)}원</span>
-              <strong>{formatMoney(clamp(amount, minPerUnit, maxPerUnit))}원</strong>
+              <strong>
+                {formatMoney(clamp(amount, minPerUnit, maxPerUnit))}원
+              </strong>
               <span>{formatMoney(maxPerUnit)}원</span>
             </RangeMeta>
           </RangeWrap>
         )}
         <InlineButtons>
-          <SmallButton onClick={() => {
-            setManualInput((v) => !v);
-            if (!manualInput) {
-              setAmountInputText(amount > 0 ? String(amount) : "");
-            }
-          }}>
+          <SmallButton
+            onClick={() => {
+              setManualInput((v) => !v);
+              if (!manualInput) {
+                setAmountInputText(amount > 0 ? String(amount) : "");
+              }
+            }}
+          >
             {manualInput ? "슬라이더로 설정" : "직접 입력하기"}
           </SmallButton>
         </InlineButtons>
@@ -248,7 +272,8 @@ const FixedSavingInput = () => {
         <HelperText>내일부터 매일 아침 6시 반에 자동 이체돼요</HelperText>
         {product && (amount < minPerUnit || amount > maxPerUnit) && (
           <WarningText>
-            납입금액은 최소 {formatMoney(minPerUnit)}원 최대 {formatMoney(maxPerUnit)}원 입니다
+            납입금액은 최소 {formatMoney(minPerUnit)}원 최대{" "}
+            {formatMoney(maxPerUnit)}원 입니다
           </WarningText>
         )}
       </Field>
@@ -264,15 +289,18 @@ const FixedSavingInput = () => {
             <Paragraph>가입대상: 은행 통장을 보유한 실명의 개인</Paragraph>
             <Paragraph>예금종류: 정기적금(자유 적금도 가능)</Paragraph>
             <Paragraph>최초 가입금액: 0원 ~ 300만원</Paragraph>
-            <Paragraph>월 저금 금액: 가입자가 설정한 매일 납입 금액의 합</Paragraph>
+            <Paragraph>
+              월 저금 금액: 가입자가 설정한 매일 납입 금액의 합
+            </Paragraph>
           </Panel>
         </Item>
         <Item>
           <Summary>금리 정보</Summary>
           <Panel>
             <Paragraph>
-              금리(세전)는 상품/기간에 따라 다르며, 우대 조건 충족 시 최고금리까지 적용될 수
-              있습니다. 실제 이자 계산은 백엔드 기준으로 산정됩니다.
+              금리(세전)는 상품/기간에 따라 다르며, 우대 조건 충족 시
+              최고금리까지 적용될 수 있습니다. 실제 이자 계산은 백엔드 기준으로
+              산정됩니다.
             </Paragraph>
           </Panel>
         </Item>
@@ -280,13 +308,17 @@ const FixedSavingInput = () => {
           <Summary>미리 빼기 및 해지 안내</Summary>
           <Panel>
             <Paragraph>중도해지 시 중도해지 이율이 적용됩니다.</Paragraph>
-            <Paragraph>자동이체 실패가 지속될 경우 상품이 해지될 수 있습니다.</Paragraph>
+            <Paragraph>
+              자동이체 실패가 지속될 경우 상품이 해지될 수 있습니다.
+            </Paragraph>
           </Panel>
         </Item>
         <Item>
           <Summary>기타사항</Summary>
           <Panel>
-            <Paragraph>세금우대/비과세 적용 여부는 개별 요건에 따라 달라질 수 있습니다.</Paragraph>
+            <Paragraph>
+              세금우대/비과세 적용 여부는 개별 요건에 따라 달라질 수 있습니다.
+            </Paragraph>
             <Paragraph>상세 내용은 상품설명서를 참고하세요.</Paragraph>
           </Panel>
         </Item>
@@ -321,7 +353,16 @@ const FixedSavingInput = () => {
       <Notice>심의필 문구 자리입니다. (예: 2025-XXX-XXXX)</Notice>
 
       <Bottom>
-        <NextButton disabled={amount <= 0 || !product || (product && (amount < minPerUnit || amount > maxPerUnit))} onClick={handleNext}>다음</NextButton>
+        <NextButton
+          disabled={
+            amount <= 0 ||
+            !product ||
+            (product && (amount < minPerUnit || amount > maxPerUnit))
+          }
+          onClick={handleNext}
+        >
+          다음
+        </NextButton>
       </Bottom>
     </Container>
   );
@@ -331,6 +372,7 @@ export default FixedSavingInput;
 
 // 스타일
 const Container = styled.div`
+  padding: 20px 20px;
   margin: 0 auto;
   max-width: 500px;
   min-height: 100vh;
@@ -353,10 +395,10 @@ const TopTitle = styled.h1`
 `;
 
 const Hero = styled.section`
-  border-radius: 12px;
+  border-radius: 15px;
   background: ${({ theme }) => theme.colors.secondary};
   padding: 16px;
-  margin-bottom: 16px;
+  margin: 16px 0px;
 `;
 
 const HeroTitle = styled.h2`
@@ -383,7 +425,7 @@ const HeroValue = styled.span`
 const HeroSub = styled.p`
   margin: 6px 0 0;
   color: ${({ theme }) => theme.colors.text};
-  font-size: 13px;
+  font-size: 14px;
 `;
 
 const HeroDesc = styled.p`
@@ -435,13 +477,35 @@ const Bottom = styled.div`
 const NextButton = styled.button`
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #9a77ff;
+  color: #fff;
   font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(154, 119, 255, 0.28),
+      0 2px 6px rgba(154, 119, 255, 0.2);
+    filter: brightness(1.03);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(154, 119, 255, 0.22);
+  }
+
   &:disabled {
-    opacity: 0.4;
+    background: #9a77ff;
+    color: #fff;
+    border-color: #9a77ff;
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
   }
 `;
 
@@ -510,6 +574,65 @@ const RangeWrap = styled.div`
 
 const RangeInput = styled.input`
   width: 100%;
+  height: 28px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  accent-color: #9a77ff; /* 최신 브라우저 기본 색상 */
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  /* WebKit (Chrome/Safari/Edge Chromium) */
+  &::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #eeeaff 0%, #efeaff 100%);
+    box-shadow: inset 0 1px 2px rgba(154, 119, 255, 0.15);
+  }
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -8px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #9a77ff;
+    box-shadow: 0 2px 8px rgba(154, 119, 255, 0.35);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  &:hover::-webkit-slider-thumb {
+    box-shadow: 0 4px 12px rgba(154, 119, 255, 0.4);
+    filter: brightness(1.02);
+  }
+  &:active::-webkit-slider-thumb {
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgba(154, 119, 255, 0.3);
+  }
+
+  /* Firefox */
+  &::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: #efeaff;
+  }
+  &::-moz-range-progress {
+    height: 6px;
+    border-radius: 999px;
+    background: #9a77ff;
+  }
+  &::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #9a77ff;
+    box-shadow: 0 2px 8px rgba(154, 119, 255, 0.35);
+    cursor: pointer;
+  }
 `;
 
 const RangeMeta = styled.div`
@@ -527,13 +650,29 @@ const InlineButtons = styled.div`
 `;
 
 const SmallButton = styled.button`
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  background: ${({ theme }) => theme.colors.white};
-  color: ${({ theme }) => theme.colors.text};
-`;
+  padding: 6px 12px;
+  border-radius: 15px;
+  border: 2px solid #9a77ff;
+  background: #fff;
+  color: #9a77ff;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.12s ease,
+    border-color 0.2s ease;
 
+  &:hover {
+    background: #9a77ff;
+    color: #fff;
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(154, 119, 255, 0.25);
+  }
+`;
 const HelperText = styled.p`
   margin: 8px 0 0;
   color: ${({ theme }) => theme.colors.lightGray};
@@ -545,5 +684,3 @@ const WarningText = styled.p`
   color: #d32f2f;
   font-size: 12px;
 `;
-
-

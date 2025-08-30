@@ -7,7 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
 import type { ProductType } from "../../api/mockDataSavingProducts";
-import { getBucketCreateList, type CreateListItem } from "../../api/getCreateList";
+import {
+  getBucketCreateList,
+  type CreateListItem,
+} from "../../api/getCreateList";
 import { createBucket } from "../../api/createBucket";
 
 type IncomingState = {
@@ -50,10 +53,14 @@ const FinalConfirm = () => {
   const days = state.periodDays || 0;
   const type = state.productType || "fixed";
   const name = state.bucketName || "제 첫 적금통 입니다.";
-  const description = state.bucketDescription || "졸업할때까지 1억을 모으려고 합니다.";
+  const description =
+    state.bucketDescription || "졸업할때까지 1억을 모으려고 합니다.";
   const isPublicFlag = state.bucketPublic !== false; // 기본값 공개
   // 총액 계산: 정기예금(td)은 일시 예치이므로 amount 그대로, 그 외는 일수 × 일 납입 금액
-  const targetAmount = useMemo(() => (type === "td" ? amount : days * amount), [type, amount, days]);
+  const targetAmount = useMemo(
+    () => (type === "td" ? amount : days * amount),
+    [type, amount, days]
+  );
 
   const interestRate = product ? Number(product.interestRate) || 0 : 0;
 
@@ -201,13 +208,39 @@ const Bottom = styled.div`
 const ConfirmButton = styled.button`
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #9a77ff;
+  color: #fff;
   font-weight: 700;
-  &:disabled { opacity: 0.5; }
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(154, 119, 255, 0.28),
+      0 2px 6px rgba(154, 119, 255, 0.2);
+    filter: brightness(1.03);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(154, 119, 255, 0.22);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(154, 119, 255, 0.25);
+  }
+
+  &:disabled {
+    background: #9a77ff;
+    color: #fff;
+    border-color: #9a77ff;
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 `;
-
-
-

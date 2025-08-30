@@ -15,10 +15,15 @@ const BucketInfoInput = () => {
   const incoming = (location.state as AnyState) || {};
 
   const [name, setName] = useState<string>("제 첫 적금통 입니다.");
-  const [description, setDescription] = useState<string>("졸업할때까지 1억을 모으려고 합니다.");
+  const [description, setDescription] = useState<string>(
+    "졸업할때까지 1억을 모으려고 합니다."
+  );
   const [isPublic, setIsPublic] = useState<boolean>(true);
 
-  const isValid = useMemo(() => name.trim().length > 0 && description.trim().length > 0, [name, description]);
+  const isValid = useMemo(
+    () => name.trim().length > 0 && description.trim().length > 0,
+    [name, description]
+  );
 
   const handleNext = () => {
     if (!isValid) return;
@@ -42,24 +47,40 @@ const BucketInfoInput = () => {
 
       <Field>
         <Label htmlFor="bucket-name">이름</Label>
-        <Input id="bucket-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="적금통 이름" />
+        <Input
+          id="bucket-name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="적금통 이름"
+        />
       </Field>
 
       <Field>
         <Label htmlFor="bucket-desc">설명</Label>
-        <TextArea id="bucket-desc" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="설명을 입력하세요" />
+        <TextArea
+          id="bucket-desc"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="설명을 입력하세요"
+        />
       </Field>
 
       <Field>
         <Label htmlFor="bucket-public">공개 여부</Label>
         <ToggleRow>
           <ToggleLabel htmlFor="bucket-public">공개</ToggleLabel>
-          <input id="bucket-public" type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+          <ToggleInput
+            id="bucket-public"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+          />
         </ToggleRow>
       </Field>
 
       <Bottom>
-        <NextButton disabled={!isValid} onClick={handleNext}>다음</NextButton>
+        <NextButton disabled={!isValid} onClick={handleNext}>
+          다음
+        </NextButton>
       </Bottom>
     </Container>
   );
@@ -70,6 +91,7 @@ export default BucketInfoInput;
 // 스타일
 const Container = styled.div`
   margin: 0 auto;
+  padding: 20px 20px;
   max-width: 500px;
   min-height: 100vh;
   background: ${({ theme }) => theme.colors.background};
@@ -93,18 +115,19 @@ const TopTitle = styled.h1`
 const Field = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 12px 0;
+  gap: 10px;
+  margin: 30px 0;
 `;
 
 const Label = styled.label`
-  font-size: 13px;
+  font-size: 16px;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const Input = styled.input`
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.text};
@@ -112,7 +135,7 @@ const Input = styled.input`
 
 const TextArea = styled.textarea`
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.text};
@@ -127,7 +150,45 @@ const ToggleRow = styled.div`
 `;
 
 const ToggleLabel = styled.label`
+  font-size: 13px;
   color: ${({ theme }) => theme.colors.text};
+`;
+
+const ToggleInput = styled.input.attrs({ type: "checkbox" })`
+  appearance: none;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  border: 2px solid #ddd0ff;
+  background: #f7f6ff;
+  position: relative;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+  }
+
+  &:checked {
+    background: #9a77ff;
+    border-color: #9a77ff;
+  }
+  &:checked::after {
+    transform: translateX(20px);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(154, 119, 255, 0.25);
+  }
 `;
 
 const Bottom = styled.div`
@@ -145,12 +206,34 @@ const Bottom = styled.div`
 const NextButton = styled.button`
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #9a77ff;
+  color: #fff;
   font-weight: 700;
-  &:disabled { opacity: 0.4; }
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(154, 119, 255, 0.28),
+      0 2px 6px rgba(154, 119, 255, 0.2);
+    filter: brightness(1.03);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(154, 119, 255, 0.22);
+  }
+
+  &:disabled {
+    background: #9a77ff;
+    color: #fff;
+    border-color: #9a77ff;
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+  }
 `;
-
-

@@ -27,7 +27,9 @@ const CharacterSetup = () => {
       </TopBar>
 
       <Body>
-        <Placeholder>캐릭터 꾸미기 컴포넌트를 여기에 추가할 예정입니다.</Placeholder>
+        <Placeholder>
+          캐릭터 꾸미기 컴포넌트를 여기에 추가할 예정입니다.
+        </Placeholder>
       </Body>
 
       <Bottom>
@@ -89,11 +91,34 @@ const Bottom = styled.div`
 const NextButton = styled.button`
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #9a77ff;
+  color: #fff;
   font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(154, 119, 255, 0.28),
+      0 2px 6px rgba(154, 119, 255, 0.2);
+    filter: brightness(1.03);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(154, 119, 255, 0.22);
+  }
+
+  &:disabled {
+    background: #9a77ff;
+    color: #fff;
+    border-color: #9a77ff;
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+  }
 `;
-
-
