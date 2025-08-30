@@ -19,7 +19,7 @@ export const EmptyMessage = styled.div`
   justify-content: center;
   align-items: center;
   padding: 3rem 1rem;
-  color: ${({ theme }) => theme.colors.gray_m};
+  color: ${({ theme }) => theme.colors.lightGray};
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
   font-size: 1rem;

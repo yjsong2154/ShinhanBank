@@ -50,7 +50,7 @@ const AchievementItem: React.FC<AchievementItemProps> = ({ achievement }) => {
                       }}
                     />
                   ) : (
-                    <Character id="0" />
+                    <Character character={0} cloth={0} hat={0}/>
                   )}
                 </S.RewardCharacter>
                 <S.RewardName $isCompleted={achievement.is_completed}>

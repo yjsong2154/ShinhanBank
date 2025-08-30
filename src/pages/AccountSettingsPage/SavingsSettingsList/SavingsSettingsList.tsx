@@ -28,7 +28,9 @@ const SavingsSettingsList = () => {
           <S.Item key={savings.id} onClick={() => handleSavingsClick(savings.id)}>
             <S.CharacterWrapper>
               <Character 
-                id="0"
+                character={0}
+                cloth={0}
+                hat={0}
               />
             </S.CharacterWrapper>
             <S.InfoWrapper>

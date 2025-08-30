@@ -24,7 +24,7 @@ const MainCharacterSettings = () => {
       <S.SectionTitle>메인 캐릭터 설정</S.SectionTitle>
 
       <S.MainCharacterWrapper>
-        {mainCharacter && <Character id="0" />}
+        {mainCharacter && <Character character={0} cloth={0} hat={0} />}
       </S.MainCharacterWrapper>
 
       <S.CharacterGrid>

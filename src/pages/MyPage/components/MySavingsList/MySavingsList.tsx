@@ -71,11 +71,11 @@ const MySavingsList = () => {
                     <S.Reactions>
                       <S.Reaction>
                         <img src="/icons/like_icon_empty.svg" alt="likes" />
-                        {item.likes ?? 0}
+                        {likes ?? 0}
                       </S.Reaction>
                       <S.Reaction>
                         <img src="/icons/comment_icon.svg" alt="comments" />
-                        {item.comments ?? 0}
+                        {comments ?? 0}
                       </S.Reaction>
                     </S.Reactions>
                     <S.Status $isCompleted={item.status === "SUCCESS"}>
