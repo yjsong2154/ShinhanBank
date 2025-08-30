@@ -2,7 +2,7 @@
 // 주요 섹션: 상단 히어로(이자 세후, 안내), 금액 슬라이더 + 직접 입력, 약관/안내, 다음 버튼.
 // 주의사항: 실행 시간/스케줄 영역 제거. 최소·최대 금액을 슬라이더로 제한하며, 이자 계산은 단순 세후 공식 적용.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
@@ -68,6 +68,14 @@ const FixedSavingInput = () => {
   const [manualInput, setManualInput] = useState<boolean>(false);
   const [amountInputText, setAmountInputText] = useState<string>("");
   const [initialized, setInitialized] = useState<boolean>(false); // 최초 로드 여부
+
+  // 약관
+  const accordionRef = useRef<HTMLDivElement | null>(null);
+  const [autoOpened, setAutoOpened] = useState(false);
+  const [scrollStarted, setScrollStarted] = useState(false);
+  const lastYRef = useRef<number>(
+    typeof window !== "undefined" ? window.scrollY : 0
+  );
 
   // 초기 포커싱/기본값
   useEffect(() => {
@@ -186,6 +194,46 @@ const FixedSavingInput = () => {
     }
   }, [product]);
 
+  // 약관 관련
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+
+      // 아래로 60px 이상 실제 스크롤한 이후부터만 트리거
+      if (!scrollStarted && currentY > 60) {
+        setScrollStarted(true);
+      }
+
+      // 위로 스크롤이거나 이미 열렸거나, 아직 스크롤 시작 안했다면 무시
+      if (currentY <= lastYRef.current || autoOpened || !scrollStarted) {
+        lastYRef.current = currentY;
+        return;
+      }
+
+      const el = accordionRef.current;
+      if (!el) {
+        lastYRef.current = currentY;
+        return;
+      }
+
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      // 약관 섹션 상단이 화면 55% 지점보다 위로 올라왔을 때 한 번만 오픈
+      if (rect.top < vh * 0.55) {
+        el.querySelectorAll<HTMLDetailsElement>("details").forEach((d) => {
+          d.open = true;
+        });
+        setAutoOpened(true);
+      }
+
+      lastYRef.current = currentY;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [autoOpened, scrollStarted]);
+
   return (
     <Container>
       <TopBar>
@@ -282,7 +330,7 @@ const FixedSavingInput = () => {
 
       {/* 약관/확인 섹션: InfoTerms 내용을 하단에 병합 */}
       <SectionTitle>약관/안내</SectionTitle>
-      <Accordion>
+      <Accordion ref={accordionRef}>
         <Item>
           <Summary>상품 안내</Summary>
           <Panel>
