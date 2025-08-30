@@ -24,6 +24,7 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import BucketInfoInput from "./pages/Buckets/BucketInfoInput";
 import CharacterSetup from "./pages/Buckets/CharacterSetup";
 import AchievementModalHost from "./components/AchievementModal/AchievementModalHost";
+import LoadingPage from "./pages/LoadingPage";
 
 function App() {
   return (
@@ -62,11 +63,17 @@ function AppContent() {
         <Routes>
           {/* 임시 애니메이션 페이지 */}
           <Route path="/animation" element={<AnimationPage />} />
-
           <Route
             path="/login"
             element={isLoggedIn ? <Navigate to="/" replace /> : <LoginPage />}
           />
+          <Route
+            path="/loading"
+            element={
+              isLoggedIn ? <LoadingPage /> : <Navigate to="/login" replace />
+            }
+          />
+
           <Route
             path="/"
             element={
@@ -145,39 +152,65 @@ function AppContent() {
           />
           <Route
             path="/buckets/fixed"
-            element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/buckets/info"
-            element={isLoggedIn ? <BucketInfoInput /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? (
+                <BucketInfoInput />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
           <Route
             path="/buckets/fixed/input"
-            element={isLoggedIn ? <FixedSavingInput /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? (
+                <FixedSavingInput />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
           <Route
             path="/buckets/character-setup"
-            element={isLoggedIn ? <CharacterSetup /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <CharacterSetup /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/buckets/pdf/:docId"
-            element={isLoggedIn ? <PdfViewer /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <PdfViewer /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/buckets/final-confirm"
-            element={isLoggedIn ? <FinalConfirm /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <FinalConfirm /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/buckets/complete"
-            element={isLoggedIn ? <Complete /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <Complete /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/buckets/flexible"
-            element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/buckets/td"
-            element={isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />}
+            element={
+              isLoggedIn ? <NewBucketStart /> : <Navigate to="/login" replace />
+            }
           />
         </Routes>
         {!shouldHideFooter && <Footer />}
