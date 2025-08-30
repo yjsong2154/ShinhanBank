@@ -58,9 +58,9 @@ const MyPage = () => {
       {/* <ChallengeHistory /> */}
 
       <S.AccountSetting>
-        <S.SettingItem onClick={() => navigate("/account-settings")}>
+        {/* <S.SettingItem onClick={() => navigate("/account-settings")}>
           계정 관리
-        </S.SettingItem>
+        </S.SettingItem> */}
         <S.SettingItem onClick={() => navigate("/privacy-policy")}>
           개인정보 처리방침
         </S.SettingItem>

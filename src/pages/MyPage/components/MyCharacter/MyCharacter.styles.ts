@@ -84,12 +84,56 @@ export const CharacterWrapper = styled.div`
   display: grid;
   place-items: center;
   box-shadow: 0 8px 24px rgba(154, 119, 255, 0.18);
+  position: relative;
+  cursor: pointer;
+  /* 모바일 탭 하이라이트(하늘색 깜빡임) 제거 */
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
 
   img,
   svg {
     width: 100%;
     height: 100%;
     object-fit: contain;
+  }
+`;
+
+export const SpeechBubble = styled.div`
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  background: #473350;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 6px 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent #473350 transparent;
   }
 `;
 

@@ -10,6 +10,7 @@ import PdfViewer from "./pages/Buckets/PdfViewer";
 import FinalConfirm from "./pages/Buckets/FinalConfirm";
 import Complete from "./pages/Buckets/Complete";
 import MainPage from "./pages/MainPage";
+import InventoryPage from "./pages/Inventory";
 import SavingsDetailPage from "./pages/SavingsDetailPage";
 import ChallengePage from "./pages/ChallengePage";
 import MyPage from "./pages/MyPage";
@@ -99,6 +100,10 @@ function AppContent() {
           <Route
             path="/mypage"
             element={isLoggedIn ? <MyPage /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/inventory"
+            element={isLoggedIn ? <InventoryPage /> : <Navigate to="/login" replace />}
           />
           <Route
             path="/notifications"
