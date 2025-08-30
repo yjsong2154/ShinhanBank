@@ -24,6 +24,7 @@ const InventoryPage = () => {
   const [selectedOutfit, setSelectedOutfit] = useState<number | null>(null);
   const [selectedHat, setSelectedHat] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   // 저장 기능
   const handleSaveCharacter = async () => {
@@ -42,22 +43,20 @@ const InventoryPage = () => {
         },
         credentials: "include",
         body: JSON.stringify({
-          "character_item": characterId,
-          "outfit_item": outfitId,
-          "hat_item": hatId,
+          "character_item_id": characterId,
+          "outfit_item_id": outfitId,
+          "hat_item_id": hatId,
         }),
       });
 
-      if (response.ok) {
-        alert("캐릭터 설정이 저장되었습니다!");
-        // 사용자 정보 다시 로드를 위해 페이지 새로고침 또는 상태 업데이트
-        window.location.reload();
-      } else {
+        if (response.ok) {
+          // 저장 성공 시 저장 완료 상태로 설정하여 버튼 비활성화
+          setIsSaved(true);
+        } else {
         throw new Error("저장에 실패했습니다.");
       }
     } catch (error) {
       console.error("Character save error:", error);
-      alert("캐릭터 저장 중 오류가 발생했습니다.");
     } finally {
       setIsSaving(false);
     }
@@ -65,6 +64,13 @@ const InventoryPage = () => {
 
   // 변경사항이 있는지 확인
   const hasChanges = selectedCharacter !== null || selectedOutfit !== null || selectedHat !== null;
+
+  // 새로운 변경사항이 있을 때 저장 완료 상태 리셋
+  const resetSavedState = () => {
+    if (isSaved) {
+      setIsSaved(false);
+    }
+  };
 
 
   if (userLoading || inventoryLoading) {
@@ -110,9 +116,9 @@ const InventoryPage = () => {
         </S.CharacterName>
         <S.SaveButton 
           onClick={handleSaveCharacter}
-          disabled={!hasChanges || isSaving}
+          disabled={!hasChanges || isSaving || isSaved}
         >
-          {isSaving ? "저장 중..." : "저장하기"}
+          {isSaving ? "저장 중..." : isSaved ? "저장 완료" : "저장하기"}
         </S.SaveButton>
       </S.CharacterSection>
 
@@ -144,21 +150,30 @@ const InventoryPage = () => {
           <CharacterTab 
             items={inventory.items_by_type.character.items}
             selectedCharacter={selectedCharacter} 
-            onCharacterSelect={setSelectedCharacter} 
+            onCharacterSelect={(id) => {
+              resetSavedState();
+              setSelectedCharacter(id);
+            }} 
           />
         )}
         {activeTab === "outfit" && (
           <OutfitTab 
             items={inventory.items_by_type.outfit.items}
             selectedOutfit={selectedOutfit} 
-            onOutfitSelect={setSelectedOutfit} 
+            onOutfitSelect={(id) => {
+              resetSavedState();
+              setSelectedOutfit(id);
+            }} 
           />
         )}
         {activeTab === "hat" && (
           <HatTab 
             items={inventory.items_by_type.hat.items}
             selectedHat={selectedHat} 
-            onHatSelect={setSelectedHat} 
+            onHatSelect={(id) => {
+              resetSavedState();
+              setSelectedHat(id);
+            }} 
           />
         )}
       </S.InventoryGrid>
