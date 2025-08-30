@@ -14,10 +14,8 @@ const BucketInfoInput = () => {
   const location = useLocation();
   const incoming = (location.state as AnyState) || {};
 
-  const [name, setName] = useState<string>("제 첫 적금통 입니다.");
-  const [description, setDescription] = useState<string>(
-    "졸업할때까지 1억을 모으려고 합니다."
-  );
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [isPublic, setIsPublic] = useState<boolean>(true);
 
   const isValid = useMemo(
@@ -131,6 +129,15 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.lightGray};
   background: ${({ theme }) => theme.colors.white};
   color: ${({ theme }) => theme.colors.text};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.lightGray};
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+  }
+  &:focus::placeholder {
+    opacity: 0;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -141,6 +148,16 @@ const TextArea = styled.textarea`
   color: ${({ theme }) => theme.colors.text};
   min-height: 100px;
   resize: vertical;
+  caret-color: ${({ theme }) => theme.colors.primary};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.lightGray};
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+  }
+  &:focus::placeholder {
+    opacity: 0;
+  }
 `;
 
 const ToggleRow = styled.div`
