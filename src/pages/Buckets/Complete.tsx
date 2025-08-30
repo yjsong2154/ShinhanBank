@@ -54,14 +54,19 @@ const Complete = () => {
 
       <Congrats>
         <CongratsTitle>축하합니다!</CongratsTitle>
-        <CongratsDesc>새 저축이 성공적으로 개설되었습니다.</CongratsDesc>
+        <SuccessImg src="/success.svg" alt="개설 완료" />
+        <CongratsDesc>새 적금통이 성공적으로 개설되었습니다.</CongratsDesc>
       </Congrats>
 
       <Card>
         <Row>
           <Label>유형</Label>
           <Value>
-            {type === "fixed" ? "적금(고정)" : type === "flexible" ? "적금(자유)" : "정기예금"}
+            {type === "fixed"
+              ? "적금(고정)"
+              : type === "flexible"
+              ? "적금(자유)"
+              : "정기예금"}
           </Value>
         </Row>
         <Row>
@@ -95,6 +100,7 @@ const Container = styled.div`
   background: ${({ theme }) => theme.colors.background};
   padding: 12px 16px 80px;
   box-sizing: border-box;
+  position: relative;
 `;
 
 const TopBar = styled.header`
@@ -111,25 +117,103 @@ const TopTitle = styled.h1`
 `;
 
 const Congrats = styled.section`
+  position: relative;
   text-align: center;
-  margin: 16px 0 12px;
+  margin: 12px -8px 16px;
+  padding: 32px 12px 16px;
+  border-radius: 24px;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+        520px 320px at 50% 22%,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.4) 36%,
+        rgba(255, 255, 255, 0) 64%
+      ),
+      radial-gradient(
+        600px 360px at 50% 34%,
+        rgba(250, 240, 170, 0.18) 0%,
+        rgba(250, 240, 170, 0) 60%
+      ),
+      linear-gradient(
+        135deg,
+        rgba(97, 104, 251, 0.16) 0%,
+        rgba(145, 105, 240, 0.14) 50%,
+        rgba(200, 97, 229, 0.12) 100%
+      );
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 28%;
+    transform: translate(-50%, -50%);
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(154, 119, 255, 0.22) 0%,
+      rgba(154, 119, 255, 0.06) 55%,
+      rgba(154, 119, 255, 0) 70%
+    );
+    filter: blur(6px);
+    z-index: -1;
+  }
 `;
 
 const CongratsTitle = styled.h2`
-  margin: 0 0 4px;
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
   color: ${({ theme }) => theme.colors.text};
 `;
 
 const CongratsDesc = styled.p`
   margin: 0;
-  color: ${({ theme }) => theme.colors.lightGray};
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const SuccessImg = styled.img`
+  display: block;
+  width: 50%;
+  max-width: 250px;
+  margin: 14px auto 0;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.18))
+    drop-shadow(0 8px 18px rgba(154, 119, 255, 0.18));
 `;
 
 const Card = styled.section`
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.secondary};
+  position: relative;
+  border-radius: 14px;
   padding: 16px;
   margin-bottom: 16px;
+  border: 1px solid rgba(154, 119, 255, 0.18);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      180deg,
+      rgba(154, 119, 255, 0.08) 0%,
+      rgba(154, 119, 255, 0.05) 55%,
+      rgba(154, 119, 255, 0.03) 100%
+    );
+    pointer-events: none;
+  }
 `;
 
 const Row = styled.div`
@@ -166,11 +250,39 @@ const Bottom = styled.div`
 const HomeButton = styled.button`
   width: 100%;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
+  border: 2px solid #9a77ff;
+  border-radius: 20px;
+  background: #9a77ff;
+  color: #fff;
   font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 14px rgba(154, 119, 255, 0.28),
+      0 2px 6px rgba(154, 119, 255, 0.2);
+    filter: brightness(1.03);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(154, 119, 255, 0.22);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(154, 119, 255, 0.25);
+  }
+
+  &:disabled {
+    background: #9a77ff;
+    color: #fff;
+    border-color: #9a77ff;
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 `;
-
-

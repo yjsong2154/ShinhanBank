@@ -216,7 +216,7 @@ export const PercentLabel = styled.span`
   transform: translateY(-50%);
   font-size: 12px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: #323232;
 `;
 
 export const Period = styled.span`
