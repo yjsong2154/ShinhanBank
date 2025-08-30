@@ -7,8 +7,9 @@ export interface RankingRow {
   rank: number;
   name: string;
   amount: number;
-  profileUrl?: string;
+  crown?: boolean;   // ✅ 왕관 여부
 }
+
 interface Props {
   top3: RankingRow[];
 }
@@ -24,11 +25,19 @@ const RankingStage: React.FC<Props> = ({ top3 }) => {
 
   return (
     <S.Wrap>
-      {podium.map(({ rank, name }) => (
+      {podium.map(({ rank, name, crown }) => (
         <S.Item key={rank} first={rank === 1}>
           <S.Avatar first={rank === 1}>
             <Character id="0" />
             <S.Badge>{rank}</S.Badge>
+
+            {/* ✅ 왕관 표시 */}
+            {crown && (
+              <S.CrownIcon
+                src="/icons/crown_small.svg"
+                alt="crown"
+              />
+            )}
           </S.Avatar>
           <S.Name>{name}</S.Name>
         </S.Item>
