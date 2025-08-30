@@ -19,8 +19,13 @@ export const Container = styled.div<{ isCompleted: boolean }>`
 
   box-shadow: ${({ isCompleted }) =>
     isCompleted
-      ? "0 6px 18px rgba(154,119,255,.18)"
-      : "0 1px 0 rgba(0,0,0,.02)"};
+      ? `
+        10px 12px 24px rgba(113, 104, 247, 0.22),
+         4px  6px 12px rgba(113, 104, 247, 0.16),
+         1px  2px  4px rgba(113, 104, 247, 0.10),
+         inset 0 1px 0 rgba(255,255,255,0.25)
+      `
+      : "0 1px 0 rgba(0,0,0,0.02)"};
 `;
 
 /* 좌우 2열 */

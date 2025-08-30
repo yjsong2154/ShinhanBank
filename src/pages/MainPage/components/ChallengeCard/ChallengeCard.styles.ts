@@ -13,7 +13,7 @@ export const Title = styled.h2`
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  color: ${({ theme }) => theme.colors.primary};
+  color: #473350;
   margin-bottom: 15px;
 `;
 
