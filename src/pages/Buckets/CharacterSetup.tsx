@@ -1,10 +1,14 @@
-// 파일 목적: 적금통 캐릭터 설정/꾸미기 단계의 빈 페이지(추후 컴포넌트 삽입 예정)
-// 주요 기능: 상단 헤더, 간단 안내 텍스트, 다음 버튼으로 최종 확인 페이지로 이동
-// 주의사항: 전달된 state를 그대로 다음 페이지로 넘깁니다.
+// 파일 목적: 적금통 캐릭터 설정/꾸미기 단계
+// 주요 기능: 캐릭터 꾸미기, 다음 버튼으로 최종 확인 페이지로 이동
+// 주의사항: 전달된 state에 캐릭터 정보를 추가하여 다음 페이지로 넘깁니다.
 
 import styled from "styled-components";
 import BackButton from "../../components/BackButton/BackButton";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import InventoryForSaving from "../SavingsSettingsPage/inventory";
+import useUserInfo from "../../hooks/useUserInfo";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 type AnyState = Record<string, unknown> | null | undefined;
 
@@ -12,11 +16,36 @@ const CharacterSetup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const incomingState = (location.state as AnyState) || {};
+  const userId = sessionStorage.getItem("user_id");
+  const { data: user, loading, error } = useUserInfo(userId || "");
+
+  const [characterItemId, setCharacterItemId] = useState<number | null>(null);
+  const [outfitItemId, setOutfitItemId] = useState<number | null>(null);
+  const [hatItemId, setHatItemId] = useState<number | null>(null);
+
+  const handleSelectionChange = (selection: { character: number | null; outfit: number | null; hat: number | null }) => {
+    setCharacterItemId(selection.character);
+    setOutfitItemId(selection.outfit);
+    setHatItemId(selection.hat);
+  };
 
   const handleNext = () => {
-    // 다음 단계로 기존 state를 그대로 전달
-    navigate("/buckets/final-confirm", { state: incomingState });
+    const nextState = {
+      ...incomingState,
+      character_item_id: characterItemId !== null ? characterItemId : user?.character.character_item.id,
+      outfit_item_id: outfitItemId !== null ? outfitItemId : user?.character.outfit_item.id,
+      hat_item_id: hatItemId !== null ? hatItemId : user?.character.hat_item.id,
+    };
+    navigate("/buckets/final-confirm", { state: nextState });
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error || !user) {
+    return <div>Error loading user data.</div>;
+  }
 
   return (
     <Container>
@@ -27,9 +56,10 @@ const CharacterSetup = () => {
       </TopBar>
 
       <Body>
-        <Placeholder>
-          캐릭터 꾸미기 컴포넌트를 여기에 추가할 예정입니다.
-        </Placeholder>
+        <InventoryForSaving 
+          onSelectionChange={handleSelectionChange} 
+          initialCharacter={user.character}
+        />
       </Body>
 
       <Bottom>
@@ -50,40 +80,28 @@ const Container = styled.div`
   padding: 12px 16px 80px;
   box-sizing: border-box;
 `;
-
-const TopBar = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 4px;
-`;
-
 const TopTitle = styled.h1`
   font-size: 18px;
   color: ${({ theme }) => theme.colors.text};
   margin: 0;
+`;
+const TopBar = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 4px;  /* 여백을 충분히 추가 */
 `;
 
 const Body = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 180px);
-`;
-
-const Placeholder = styled.p`
-  color: ${({ theme }) => theme.colors.lightGray};
-  font-size: 14px;
+  height: calc(100vh - 180px);  /* 상단 바의 높이와 Bottom 영역을 제외한 콘텐츠 크기 */
+  margin-top: 24px;  /* 캐릭터 설정이 위에 붙지 않게 여백 추가 */
 `;
 
 const Bottom = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  padding: 12px 16px;
   background: ${({ theme }) => theme.colors.background};
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
 `;
@@ -119,6 +137,5 @@ const NextButton = styled.button`
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
-  }
   }
 `;

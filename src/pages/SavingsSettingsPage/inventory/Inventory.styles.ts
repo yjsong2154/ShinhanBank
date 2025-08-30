@@ -8,7 +8,8 @@ export const Container = styled.div`
   max-width: 500px;
   margin: 0 auto;
   background: #f9f8ff;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Header = styled.header`

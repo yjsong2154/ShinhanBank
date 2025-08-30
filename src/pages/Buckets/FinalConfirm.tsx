@@ -23,6 +23,9 @@ type IncomingState = {
   bucketName?: string;
   bucketDescription?: string;
   bucketPublic?: boolean;
+  character_item_id?: number;
+  outfit_item_id?: number;
+  hat_item_id?: number;
 };
 
 const FinalConfirm = () => {
@@ -80,9 +83,9 @@ const FinalConfirm = () => {
         target_amount: targetAmount,
         is_public: isPublicFlag ? "TRUE" : "FALSE",
         deposit_cycle: "daily",
-        character_item_id: 1,
-        outfit_item_id: 4,
-        hat_item_id: 7,
+        character_item_id: state.character_item_id || 1,
+        outfit_item_id: state.outfit_item_id || 0,
+        hat_item_id: state.hat_item_id || 0,
       });
 
       navigate("/buckets/complete", {

@@ -28,39 +28,51 @@ const InventoryPage = () => {
 
   // 저장 기능
   const handleSaveCharacter = async () => {
-    if (!user) return;
+  if (!user) return;
 
-    setIsSaving(true);
-    try {
-      const characterId = selectedCharacter !== null ? selectedCharacter : parseInt(String(user.character.character_item.id));
-      const outfitId = selectedOutfit !== null ? selectedOutfit : parseInt(String(user.character.outfit_item.id));
-      const hatId = selectedHat !== null ? selectedHat : parseInt(String(user.character.hat_item.id));
+  setIsSaving(true);
+  try {
+    const characterId = selectedCharacter !== null ? selectedCharacter : parseInt(String(user.character.character_item.id));
+    const outfitId = selectedOutfit !== null ? selectedOutfit : user.character.outfit_item?.id || 0;
+    const hatId = selectedHat !== null ? selectedHat : user.character.hat_item?.id || 0;
 
-      const response = await fetch(`${API_URL}/users/character`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          "character_item_id": characterId,
-          "outfit_item_id": outfitId,
-          "hat_item_id": hatId,
-        }),
-      });
+    // 요청 본문 객체 초기화
+    const requestBody: any = {
+      "character_item_id": characterId,
+    };
 
-        if (response.ok) {
-          // 저장 성공 시 저장 완료 상태로 설정하여 버튼 비활성화
-          setIsSaved(true);
-        } else {
-        throw new Error("저장에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("Character save error:", error);
-    } finally {
-      setIsSaving(false);
+    // outfitId가 0이 아니면 outfit_item_id 추가
+    if (outfitId !== 0) {
+      requestBody["outfit_item_id"] = outfitId;
     }
-  };
+
+    // hatId가 0이 아니면 hat_item_id 추가
+    if (hatId !== 0) {
+      requestBody["hat_item_id"] = hatId;
+    }
+
+    const response = await fetch(`${API_URL}/users/character`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(requestBody),
+    });
+
+    if (response.ok) {
+      // 저장 성공 시 저장 완료 상태로 설정하여 버튼 비활성화
+      setIsSaved(true);
+    } else {
+      throw new Error("저장에 실패했습니다.");
+    }
+  } catch (error) {
+    console.error("Character save error:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
+
 
   // 변경사항이 있는지 확인
   const hasChanges = selectedCharacter !== null || selectedOutfit !== null || selectedHat !== null;
@@ -104,8 +116,8 @@ const InventoryPage = () => {
         <S.CharacterWrapper>
           <Character
             character={selectedCharacter !== null ? selectedCharacter : parseInt(String(user.character.character_item.id))}
-            cloth={selectedOutfit !== null ? selectedOutfit : parseInt(String(user.character.outfit_item.id))}
-            hat={selectedHat !== null ? selectedHat : parseInt(String(user.character.hat_item.id))}
+            cloth={selectedOutfit !== null ? selectedOutfit : user.character.outfit_item?.id || 0}
+            hat={selectedHat !== null ? selectedHat : user.character.hat_item?.id || 0}
           />
         </S.CharacterWrapper>
 

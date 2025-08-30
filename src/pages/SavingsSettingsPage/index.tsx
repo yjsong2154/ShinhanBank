@@ -64,13 +64,20 @@ const SavingsSettingsPage = () => {
       return;
     }
 
-    const bodyData = {
-      name: title,
-      description: description,
-      character_item_id: characterItemId,
-      outfit_item_id: outfitItemId,
-      hat_item_id: hatItemId,
-    };
+    const bodyData: Record<string, unknown> = {
+  name: title,
+  description: description,
+  character_item_id: characterItemId,
+};
+
+// 조건에 따라 outfit_item_id와 hat_item_id 추가
+if (outfitItemId !== 0) {
+  bodyData.outfit_item_id = outfitItemId;
+}
+
+if (hatItemId !== 0) {
+  bodyData.hat_item_id = hatItemId;
+}
 
     console.log("Submitting settings:", bodyData);
 
@@ -129,18 +136,18 @@ const SavingsSettingsPage = () => {
       </S.Section>
 
       <S.Section>
-        <S.SectionTitle>캐릭터 꾸미기</S.SectionTitle>
-        {data.bucket.owner.character && (
-          <InventoryForSaving
-            onSelectionChange={handleCharacterSelectionChange}
-            initialCharacter={{
-              ...data.bucket.owner.character,
-              character_item: { id: parseInt(data.bucket.owner.character.character_item.id) },
-              outfit_item: { id: parseInt(data.bucket.owner.character.outfit_item.id) },
-              hat_item: { id: parseInt(data.bucket.owner.character.hat_item.id) },
-            }}
-          />
-        )}
+      <S.SectionTitle>캐릭터 꾸미기</S.SectionTitle>
+      {data.bucket.owner.character && (
+      <InventoryForSaving
+        onSelectionChange={handleCharacterSelectionChange}
+        initialCharacter={{
+          ...data.bucket.owner.character,
+          character_item: { id: parseInt(data.bucket.owner.character.character_item.id) },
+          outfit_item: { id: data.bucket.owner.character.outfit_item?.id ? parseInt(data.bucket.owner.character.outfit_item.id) : 0 },
+          hat_item: { id: data.bucket.owner.character.hat_item?.id ? parseInt(data.bucket.owner.character.hat_item.id) : 0 },
+        }}
+      />
+      )}
       </S.Section>
 
       <S.Section>
