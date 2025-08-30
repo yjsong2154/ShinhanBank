@@ -95,11 +95,13 @@ export const CharacterBubble = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 
+  /* 👇 avatar 크기 키워주기 */
+  --avatar: 110px; /* 원래보다 크게 */
   width: var(--avatar);
   height: var(--avatar);
+
   border-radius: 50%;
   overflow: hidden;
-
   background: transparent;
   box-shadow: none;
 

@@ -53,3 +53,13 @@ export const Name = styled.div`
   text-align: center;
   line-height: 1.2;
 `;
+
+export const CrownIcon = styled.img`
+  position: absolute;
+  top: -10px;                  /* 조금 더 위로 */
+  left: 20%;                   /* 중앙에서 살짝 왼쪽 */
+  transform: translateX(-50%) rotate(-30deg);  /* -15도 기울임 */
+  width: 30px;
+  height: 30px;
+  z-index: 3;
+`;

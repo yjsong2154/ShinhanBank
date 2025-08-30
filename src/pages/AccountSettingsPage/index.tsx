@@ -1,6 +1,6 @@
 import BackButton from "../../components/BackButton/BackButton";
 import * as S from "./AccountSettingsPage.styles";
-import ThemeSettings from "./ThemeSettings/ThemeSettings";
+// import ThemeSettings from "./ThemeSettings/ThemeSettings";
 import MainCharacterSettings from "./MainCharacterSettings/MainCharacterSettings";
 import SavingsSettingsList from "./SavingsSettingsList/SavingsSettingsList";
 
@@ -13,7 +13,7 @@ const AccountSettingsPage = () => {
       </S.Header>
 
       <MainCharacterSettings />
-      <ThemeSettings />
+      {/* <ThemeSettings /> */}
       <SavingsSettingsList />
     </S.Container>
   );
