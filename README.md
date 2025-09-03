@@ -61,6 +61,36 @@
 ## 🖥️ 화면 구성 및 시연 동영상
 - **시연 영상**    
 https://youtube.com/shorts/6i-mFkp4MJI?feature=share
+<br></br>
+
+
+<table>
+  <tr>
+    <th>메인 화면</th>
+    <th>메인 화면(랭킹 및 피드)</th>
+    <th>적금통 개설 화면</th>
+    <th>적금통 상세 화면</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/3ef40563-1567-4e6a-b11e-c78acb3661c9" width="200"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/6e7d841e-aaba-4c3f-9d50-28fa97e05c10" width="200"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/3586ed49-c2f4-49c3-bb30-7ea05a4ae3e1" width="200"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/f7886180-49f0-40b6-ba44-a70272f5dd0d" width="200"></td>
+  </tr>
+  <tr>
+    <th>알림 화면</th>
+    <th>챌린지 화면</th>
+    <th>마이페이지 화면</th>
+    <th>캐릭터 설정 화면</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://github.com/user-attachments/assets/f99b2068-60af-449d-bde2-0cc5d7ab8987" width="200"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/29b1876c-bb6e-44d7-bb2a-e8ccc39d7678" width="200"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/659bb2ba-c897-428a-913f-f21115a7f9b3" width="200"></td>
+    <td align="center"><img src="https://github.com/user-attachments/assets/c2ae23fe-ebb4-4f48-a8fc-3eb7d1c00c32" width="200"></td>
+  </tr>
+</table>
+
 <br>
 
 ## ⚙️ 프로젝트 실행 가이드
