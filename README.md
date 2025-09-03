@@ -1,3 +1,4 @@
+<img width="1400" height="350" alt="banner_wide_3x" src="https://github.com/user-attachments/assets/83c00b0b-ecdd-4fd5-9a0d-e557da735ac9" />    
 
 # 🐷 적금통 키우기 - 게임처럼 재밌게 키우고 공유하는 나만의 적금
 ## 📖 개요
